@@ -48,7 +48,7 @@
     font: inherit;
     cursor: pointer;
   }
-  nav button.active { background: var(--pine); color: white; border-color: var(--pine); }
+  nav button.active, .ghost.on { background: var(--pine); color: white; border-color: var(--pine); }
   .btn { background: var(--pine); color: white; border-color: var(--pine); border-radius: 8px; }
   .ghost { border-radius: 8px; }
   button:hover { filter: brightness(0.98); }
@@ -114,12 +114,15 @@
   .split { display: grid; grid-template-columns: 340px 1fr; gap: 16px; }
   .check { display: flex; gap: 8px; align-items: flex-start; font-size: 13px; color: var(--ink); margin: 8px 0; }
   .check input { margin-top: 3px; }
+  .offices { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin: 8px 0; }
+  .offices div { background: #f7f1e6; border-radius: 10px; padding: 8px 10px; font-size: 13px; }
+  .legal-card { border-top: 1px solid var(--line); padding: 14px 0; }
   .hide { display: none; }
   .tagline { font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #b7d0c4; margin-bottom: 6px; }
   a { color: var(--pine); }
   .legend { display: flex; gap: 8px; flex-wrap: wrap; margin: 8px 0 12px; }
-  @media (max-width: 900px) {
-    .grid, .cards, .split, .filters { grid-template-columns: 1fr; }
+    @media (max-width: 900px) {
+    .grid, .cards, .split, .filters, .offices { grid-template-columns: 1fr; }
   }
   @media print {
     header, nav, .noprint { display: none !important; }
@@ -139,6 +142,8 @@
     <button type="button" data-view="overview">總覽</button>
     <button type="button" data-view="formula" class="active">配方比對</button>
     <button type="button" data-view="db">專利庫</button>
+    <button type="button" data-view="legal">請求項與同族</button>
+    <button type="button" data-view="lit">非專利文獻</button>
     <button type="button" data-view="herbs">藥味地圖</button>
     <button type="button" data-view="help">怎麼讀結果</button>
   </nav>
@@ -231,6 +236,35 @@
     </div>
   </section>
 
+  <section id="view-legal" class="hide">
+    <div class="panel">
+      <h2>獨立請求項的法律範圍，以及台、中、美是否仍有效</h2>
+      <p>查核日 2026-11-02。下面依已下載的 Google Patents 全文與同族欄整理，不是 CNIPA、TIPO、USPTO 的官方登記簿。年費、權利人變更和各國生效範圍都可能再變。</p>
+      <p class="small">從屬請求項只會把範圍縮得更窄，所以這裡寫獨立請求項的外圍。「由…製成／組成／組成为」以及韓文「이루어진」是封閉式，少一味通常就不落在請求項裡。「包含／comprising／含有」是開放式，多加其他成分仍可能落在裡面。PCT 標 Ceased，只表示國際申請本身沒有變成一國的專利權。</p>
+      <div class="row" id="legal-filters" style="margin:12px 0">
+        <button type="button" class="ghost on" data-legal="all">全部</button>
+        <button type="button" class="ghost" data-legal="right">三地至少一地頁面標有效</button>
+        <button type="button" class="ghost" data-legal="trio">三地都要看</button>
+        <button type="button" class="ghost" data-legal="none">三地都還沒看到排他權</button>
+      </div>
+      <div id="legal-list"></div>
+    </div>
+  </section>
+
+  <section id="view-lit" class="hide">
+    <div class="panel">
+      <h2>已發表的藥物與中藥成分</h2>
+      <p>這裡收的是非專利公開文獻：診療指南、藥品說明書、系統性綜述，以及寫明組成的臨床試驗。檢索日 2026-11-02。這不是完整的文獻檢索，也不是用藥建議。公開論文和指南一樣會影響新穎性，但這一段不計入專利比對分數。</p>
+      <div class="row" id="lit-filters" style="margin:12px 0">
+        <button type="button" class="ghost on" data-lit="all">全部</button>
+        <button type="button" class="ghost" data-lit="drug">已發表藥物</button>
+        <button type="button" class="ghost" data-lit="herb">中藥方與成分</button>
+        <button type="button" class="ghost" data-lit="review">綜述與指引</button>
+      </div>
+      <div id="lit-list"></div>
+    </div>
+  </section>
+
   <section id="view-help" class="hide">
     <div class="panel">
       <h2>怎麼用這份結果判斷能不能申請</h2>
@@ -242,11 +276,11 @@
       <p><b>你的藥被包在大復方裡。</b>對方沒有單獨公開你這個較小組合。這通常還不是「相同組合物已經存在」，但審查意見常會問：從那張大處方刪掉幾味，是不是顯而易見。</p>
       <p><b>只有部分重疊。</b>甘草、白鮮皮、苦參、黃柏這類藥在皮膚方裡非常常見。只重疊這些，不足以說配方不能申請，也不能說已經可以申請。</p>
       <h3>這份結果沒有做的事</h3>
-      <p>沒有讀完整份請求項的法律範圍，沒有查同族專利在台灣、中國、美國是否都仍有效，沒有搜尋期刊、學位論文和藥物說明書。公開論文一樣會毀掉新穎性。工作集外的一件文獻，就足以改變結論。</p>
+      <p>「請求項與同族」已依 2026-11-02 下載的授權文本讀過獨立請求項，並依 Google Patents 同族頁整理台灣、中國、美國是否仍有效。這不是 CNIPA、TIPO、USPTO 的官方登記簿。「非專利文獻」另收了一批指南、綜述和具名試驗，仍然不是完整的期刊檢索。工作集外的一件文獻，就足以改變結論。</p>
       <p>權利消滅的專利仍然是先前技術。它不能再禁止別人實施，但別人也不能把同一發明再申請一次。</p>
       <h3>工作集邊界</h3>
       <p id="scope-note"></p>
-      <p class="small muted">非專利線索：林口長庚有厚朴萃取物軟膏治療異位性皮膚炎的前驅臨床報告（國家中醫藥研究所刊載）。那不是專利，但是公開文獻。配方若以厚朴為特徵，檢索要把這類論文算進去。本次沒有把論文混進專利比對分數。</p>
+      <p class="small muted">非專利線索收在「非專利文獻」，包含診療指南、系統性綜述和具名臨床試驗裡已經發表的藥物與中藥成分。那些公開文獻會影響新穎性，但沒有併入專利比對分數。</p>
     </div>
   </section>
 </div>
@@ -285,19 +319,19 @@ const DB = [
     indication: "core",
     indicationText: "特應性皮炎、濕疹",
     category: "formula",
-    confidence: "已核對摘要與法律狀態頁",
+    confidence: "已核對授權請求項 1",
     url: "https://patents.google.com/patent/CN103393981B/zh",
-    gist: "以白朮、太子參、山藥、薏苡仁、白茅根、連翹、甘草、白鮮皮、珍珠粉組成，用於特應性皮炎與濕疹。",
+    gist: "授權請求項 1 是封閉式：炒白朮、太子參、山藥、薏苡仁、白茅根、連翹、生甘草、白鮮皮、珍珠粉。範圍比摘要窄。",
     parts: [
-      P("白朮", { min: 5, max: 30, unit: "重量份" }),
-      P("太子參", { min: 5, max: 60, unit: "重量份" }),
-      P("山藥", { min: 5, max: 60, unit: "重量份" }),
-      P("薏苡仁", { min: 10, max: 60, unit: "重量份" }),
-      P("白茅根", { min: 5, max: 60, unit: "重量份" }),
-      P("連翹", { min: 5, max: 30, unit: "重量份" }),
-      P("甘草", { min: 1, max: 10, unit: "重量份" }),
-      P("白鮮皮", { min: 5, max: 30, unit: "重量份" }),
-      P("珍珠", { label: "珍珠粉", min: 0.1, max: 5, unit: "重量份" })
+      P("白朮", { label: "炒白朮", min: 8, max: 15, unit: "重量份" }),
+      P("太子參", { min: 8, max: 15, unit: "重量份" }),
+      P("山藥", { min: 8, max: 20, unit: "重量份" }),
+      P("薏苡仁", { min: 10, max: 25, unit: "重量份" }),
+      P("白茅根", { min: 8, max: 20, unit: "重量份" }),
+      P("連翹", { min: 8, max: 15, unit: "重量份" }),
+      P("甘草", { label: "生甘草", min: 3, max: 7, unit: "重量份" }),
+      P("白鮮皮", { min: 8, max: 15, unit: "重量份" }),
+      P("珍珠", { label: "珍珠粉", min: 0.1, max: 0.6, unit: "重量份" })
     ]
   },
   {
@@ -338,9 +372,9 @@ const DB = [
     indication: "adjacent",
     indicationText: "濕疹外洗",
     category: "formula",
-    confidence: "已核對摘要",
+    confidence: "已核對授權請求項。摘要的十四味少了萆薢、百部、荊芥",
     url: "https://patents.google.com/patent/CN104771515B/zh",
-    gist: "苦參、蛇床子、地膚子、白鮮皮等十四味外洗。屬鄰近皮膚病先前技術。",
+    gist: "授權請求項是封閉式外洗，十七味。萆薢、百部、荊芥各固定 10 克。",
     parts: [
       P("苦參", { min: 10, max: 30, unit: "克" }),
       P("蛇床子", { min: 10, max: 15, unit: "克" }),
@@ -355,7 +389,10 @@ const DB = [
       P("紫花地丁", { min: 15, max: 30, unit: "克" }),
       P("蒼朮", { min: 10, max: 15, unit: "克" }),
       P("龍膽", { min: 10, max: 15, unit: "克" }),
-      P("甘草", { min: 9, max: 12, unit: "克" })
+      P("甘草", { min: 9, max: 12, unit: "克" }),
+      P("萆薢", { min: 10, max: 10, unit: "克" }),
+      P("百部", { min: 10, max: 10, unit: "克" }),
+      P("荊芥", { min: 10, max: 10, unit: "克" })
     ]
   },
   {
@@ -387,22 +424,22 @@ const DB = [
     ]
   },
   {
-    id: "CN106822339A",
+    id: "CN106822339B",
     title: "一種治療嬰幼兒或兒童濕疹的中藥組合物及其製備方法",
     jurisdiction: "CN",
-    status: "公開未授權",
-    statusNote: "本次看到的頁面是公開文本 A，未見授權紀錄。說明書療效段把適應症寫成濕疹（特應性皮炎）。",
+    status: "權利消滅（頁面記載）",
+    statusNote: "已授權為 CN106822339B。Google Patents 標 Expired - Fee Related，屆滿日欄 2037-04-02。沒有台灣、美國同族。公開內容仍是先前技術。",
     filed: "2017-04-02",
     published: "2017-06-13",
-    granted: "",
+    granted: "授權號 CN106822339B",
     applicant: "個人（陳建宏）",
     inventors: "陳建宏",
     route: "外用",
     indication: "core",
     indicationText: "嬰幼兒或兒童濕疹；說明書對應特應性皮炎",
     category: "formula",
-    confidence: "已核對摘要與實施例用量",
-    url: "https://patents.google.com/patent/CN106822339A/zh",
+    confidence: "已核對授權請求項 1",
+    url: "https://patents.google.com/patent/CN106822339B/zh",
     gist: "魚腥草、黃柏、大青葉、茵陳、紫蘇葉、丁香、五味子。較佳例為 80、60、20、20、15、15、10 份。",
     parts: [
       P("魚腥草", { min: 20, max: 240, unit: "重量份" }),
@@ -419,25 +456,25 @@ const DB = [
     title: "一種治療特應性皮炎的外用軟膏",
     jurisdiction: "CN",
     status: "授權",
-    statusNote: "授權號採 Patsnap 條目 CN108853272B。組成引自 WO2024000914A1 背景技術對 CN108853272A 的引述，本次未逐字核對請求項。",
+    statusNote: "Google Patents 標 Active，屆滿日欄 2038-09-25。同族只有中國。",
     filed: "",
     published: "",
-    granted: "",
-    applicant: "本次未核對",
+    granted: "CN108853272B",
+    applicant: "見授權文本",
     inventors: "",
     route: "外用",
     indication: "core",
     indicationText: "特應性皮炎外用軟膏",
     category: "formula",
-    confidence: "二手引述，紫花地丁這一味請覆核原文",
+    confidence: "已核對授權請求項 1。紫花地丁在授權文本中",
     url: "https://patents.google.com/patent/CN108853272B/zh",
-    gist: "引文組成：紫草炭、黃柏、冬瓜仁油、紅花、紫花地丁、蜂蠟。英譯 Purple Flower Dips 暫記為紫花地丁。",
+    gist: "封閉式軟膏：紫草炭、黃柏、冬瓜子油、紅花、紫花地丁、蜂蠟，並限定水煎、紫草炭化、蜂蠟熔化、0–4°C 冷卻的製法。",
     parts: [
       P("紫草", { label: "紫草炭", min: 60, max: 80, unit: "重量份" }),
       P("黃柏", { min: 70, max: 90, unit: "重量份" }),
-      P("冬瓜子", { label: "冬瓜仁油", min: 300, max: 400, unit: "重量份" }),
+      P("冬瓜子", { label: "冬瓜子油", min: 300, max: 400, unit: "重量份" }),
       P("紅花", { min: 20, max: 30, unit: "重量份" }),
-      P("紫花地丁", { min: 30, max: 50, unit: "重量份", note: "英譯對照，請覆核" }),
+      P("紫花地丁", { min: 30, max: 50, unit: "重量份" }),
       P("蜂蠟", { kind: "other", role: "carrier", min: 60, max: 80, unit: "重量份" })
     ]
   },
@@ -456,25 +493,25 @@ const DB = [
     indication: "core",
     indicationText: "特應性皮炎，說明書針對血虛風燥",
     category: "formula",
-    confidence: "已核對摘要",
+    confidence: "已核對授權請求項。範圍比摘要窄",
     url: "https://patents.google.com/patent/CN112870286B/zh",
-    gist: "基本 15 味內服，鉤藤、地膚子、珍珠母、酸棗仁、桃仁、紅花依症狀選加。說明書寫可做成口服或外用。",
+    gist: "授權請求項是封閉式，基本十五味用較窄區間；鉤藤等六味下限為 0，等於可以不加。",
     parts: [
-      P("生地黃", { min: 10, max: 30, unit: "重量份" }),
-      P("雞血藤", { min: 10, max: 20, unit: "重量份" }),
-      P("當歸", { min: 5, max: 20, unit: "重量份" }),
-      P("川芎", { min: 8, max: 15, unit: "重量份" }),
-      P("丹參", { min: 10, max: 30, unit: "重量份" }),
-      P("萆薢", { min: 10, max: 20, unit: "重量份" }),
-      P("防風", { min: 8, max: 20, unit: "重量份" }),
-      P("蒺藜", { label: "炒蒺藜", min: 5, max: 15, unit: "重量份" }),
-      P("白朮", { min: 10, max: 30, unit: "重量份" }),
-      P("柴胡", { min: 8, max: 15, unit: "重量份" }),
-      P("白芍", { min: 8, max: 20, unit: "重量份" }),
-      P("牡蠣", { min: 15, max: 30, unit: "重量份" }),
-      P("茯神", { min: 10, max: 30, unit: "重量份" }),
-      P("白鮮皮", { min: 10, max: 20, unit: "重量份" }),
-      P("甘草", { min: 6, max: 15, unit: "重量份" }),
+      P("生地黃", { min: 18, max: 22, unit: "重量份" }),
+      P("雞血藤", { min: 13, max: 16, unit: "重量份" }),
+      P("當歸", { min: 8, max: 12, unit: "重量份" }),
+      P("川芎", { min: 8, max: 12, unit: "重量份" }),
+      P("丹參", { min: 18, max: 23, unit: "重量份" }),
+      P("萆薢", { min: 13, max: 16, unit: "重量份" }),
+      P("防風", { min: 8, max: 13, unit: "重量份" }),
+      P("蒺藜", { label: "炒蒺藜", min: 10, max: 13, unit: "重量份" }),
+      P("白朮", { min: 13, max: 18, unit: "重量份" }),
+      P("柴胡", { min: 8, max: 13, unit: "重量份" }),
+      P("白芍", { min: 13, max: 16, unit: "重量份" }),
+      P("牡蠣", { min: 25, max: 30, unit: "重量份" }),
+      P("茯神", { min: 17, max: 23, unit: "重量份" }),
+      P("白鮮皮", { min: 12, max: 17, unit: "重量份" }),
+      P("甘草", { min: 8, max: 12, unit: "重量份" }),
       P("鉤藤", { required: false, min: 0, max: 15, unit: "重量份" }),
       P("地膚子", { required: false, min: 0, max: 15, unit: "重量份" }),
       P("珍珠母", { required: false, min: 0, max: 30, unit: "重量份" }),
@@ -596,20 +633,20 @@ const DB = [
     indication: "core",
     indicationText: "特應性皮炎、濕疹，說明書強調減少復發",
     category: "formula",
-    confidence: "已核對摘要與實施例",
+    confidence: "已核對授權請求項。範圍比摘要窄",
     url: "https://patents.google.com/patent/CN115154547B/zh",
-    gist: "黃芪、黨參、熟地黃、白朮、茯苓、麥門冬、五味子、防風、黃芩、陳皮、炙甘草。實施例為水煎口服。",
+    gist: "授權請求項是封閉式十一味，區間比摘要窄。",
     parts: [
-      P("黃芪", { min: 6, max: 30, unit: "重量份" }),
-      P("黨參", { min: 6, max: 30, unit: "重量份" }),
-      P("熟地黃", { min: 6, max: 30, unit: "重量份" }),
-      P("白朮", { min: 6, max: 30, unit: "重量份" }),
-      P("茯苓", { min: 6, max: 30, unit: "重量份" }),
-      P("麥門冬", { min: 6, max: 30, unit: "重量份" }),
-      P("五味子", { min: 3, max: 6, unit: "重量份" }),
+      P("黃芪", { min: 9, max: 30, unit: "重量份" }),
+      P("黨參", { min: 6, max: 15, unit: "重量份" }),
+      P("熟地黃", { min: 6, max: 15, unit: "重量份" }),
+      P("白朮", { min: 6, max: 10, unit: "重量份" }),
+      P("茯苓", { min: 6, max: 15, unit: "重量份" }),
+      P("麥門冬", { min: 6, max: 15, unit: "重量份" }),
+      P("五味子", { min: 2, max: 5, unit: "重量份" }),
       P("防風", { min: 6, max: 15, unit: "重量份" }),
-      P("黃芩", { min: 6, max: 15, unit: "重量份" }),
-      P("陳皮", { min: 6, max: 9, unit: "重量份" }),
+      P("黃芩", { min: 6, max: 10, unit: "重量份" }),
+      P("陳皮", { min: 3, max: 9, unit: "重量份" }),
       P("甘草", { label: "炙甘草", min: 3, max: 6, unit: "重量份" })
     ]
   },
@@ -618,7 +655,7 @@ const DB = [
     title: "一種特應性皮炎、濕疹的外用中藥組合物及其除濕糊",
     jurisdiction: "CN",
     status: "授權",
-    statusNote: "2024-02-27 授權。天眼查頁面標有效。",
+    statusNote: "Google Patents 標 Active，屆滿日欄 2043-02-17。同族只有中國。",
     filed: "2023-02-17",
     published: "2023-04-18",
     granted: "2024-02-27",
@@ -628,17 +665,27 @@ const DB = [
     indication: "core",
     indicationText: "特應性皮炎、濕疹亞急性期滲出",
     category: "formula",
-    confidence: "組成依公開摘要，本次未取得各藥份量",
+    confidence: "已核對授權請求項。兩組封閉配方都含氧化鋅",
     url: "https://patents.google.com/patent/CN115969922B/zh",
-    gist: "蒼朮、馬齒莧、血竭、青黛、黃連、地榆、五倍子、煅石膏，做成除濕糊。",
-    parts: ["蒼朮","馬齒莧","血竭","青黛","黃連","地榆","五倍子","煅石膏"].map(function (n) { return P(n); })
+    gist: "兩組擇一的封閉配方，都含氧化鋅。摘要沒有寫氧化鋅。",
+    parts: [
+      P("青黛", { min: 5, max: 20, unit: "重量份" }),
+      P("五倍子", { min: 5, max: 20, unit: "重量份" }),
+      P("黃連", { min: 5, max: 20, unit: "重量份" }),
+      P("血竭", { min: 2.5, max: 10, unit: "重量份" }),
+      P("地榆", { min: 5, max: 20, unit: "重量份" }),
+      P("馬齒莧", { min: 5, max: 20, unit: "重量份" }),
+      P("蒼朮", { min: 5, max: 20, unit: "重量份" }),
+      P("煅石膏", { min: 10, max: 40, unit: "重量份" }),
+      P("氧化鋅", { kind: "other", min: 10, max: 20, unit: "重量份" })
+    ]
   },
   {
     id: "CN117100801B",
     title: "一種抗特異性皮炎的藥物組合物及其製備方法和用途",
     jurisdiction: "CN",
     status: "授權",
-    statusNote: "公開頁記載 2025-12-16 授權為 CN117100801B，頁面標 Active。同族包含 WO2024012387A1。",
+    statusNote: "Google Patents 標 Active，屆滿日欄 2042-05-17。這次下載的授權頁同族清單只有中國一件。",
     filed: "2022-05-17",
     published: "2023-11-24",
     granted: "2025-12-16",
@@ -648,14 +695,14 @@ const DB = [
     indication: "core",
     indicationText: "特應性皮炎的皮損與瘙癢",
     category: "formula",
-    confidence: "已核對摘要範圍與較佳配比",
+    confidence: "已核對授權請求項。保護的是特定溶媒萃取物，不是粗煎劑",
     url: "https://patents.google.com/patent/CN117100801B/zh",
-    gist: "黃連、黃芩、黃柏、白鮮皮。較佳例 9:6:6:9。",
+    gist: "授權請求項指定黃連 9、黃芩 6、黃柏 6、白鮮皮 9，乙醇浸泡萃取、除去乙醇後再以乙酸乙酯萃取成粉。",
     parts: [
-      P("黃連", { min: 3, max: 50, unit: "重量份" }),
-      P("黃芩", { min: 3, max: 30, unit: "重量份" }),
-      P("黃柏", { min: 3, max: 30, unit: "重量份" }),
-      P("白鮮皮", { min: 6, max: 50, unit: "重量份" })
+      P("黃連", { min: 9, max: 9, unit: "重量份" }),
+      P("黃芩", { min: 6, max: 6, unit: "重量份" }),
+      P("黃柏", { min: 6, max: 6, unit: "重量份" }),
+      P("白鮮皮", { label: "白鮮皮乙醇／乙酸乙酯萃取物", kind: "isolate", min: 9, max: 9, unit: "重量份" })
     ]
   },
   {
@@ -663,7 +710,7 @@ const DB = [
     title: "治療皮膚病的中藥組合物、其製備方法及用途",
     jurisdiction: "WO",
     status: "國際公開",
-    statusNote: "PCT 頁面標 Ceased。國際公開後仍可作為先前技術。說明書引 CN110025705A 揭露同一配方，本工作集不另列一筆，避免同一組合被算兩次。",
+    statusNote: "PCT 頁面標 Ceased，同族清單只有這件 WO，沒有台灣、中國、美國家族成員。同配方的中國公開 CN110025705A 頁面標 Withdrawn，且沒有被列進這件 WO 的同族。兩份公開都是先前技術，這次沒有看到仍有效的排他權。",
     filed: "2020-09-04",
     published: "2022-03-10",
     granted: "",
@@ -694,7 +741,7 @@ const DB = [
     title: "一種治療皮膚病的中藥組合物及其製備方法",
     jurisdiction: "WO",
     status: "國際公開",
-    statusNote: "PCT 頁面標 Ceased。優先權 2022-06-30。國際公開仍是先前技術。",
+    statusNote: "PCT 本身標 Ceased。中國同族 CN115054662B 頁面標 Active，屆滿日欄 2042-06-30。沒有台灣、美國同族。授權請求項與這份 WO 的擇一配方一致。",
     filed: "2022-10-10",
     published: "2024-01-04",
     granted: "",
@@ -771,14 +818,20 @@ const DB = [
     indication: "core",
     indicationText: "特應性皮炎症狀改善用乳霜",
     category: "formula",
-    confidence: "已核對摘要。生藥是擇一或合併，不是固定復方",
+    confidence: "已核對韓文授權請求項 1。英文機譯不可靠",
     url: "https://patents.google.com/patent/KR101291343B1/en",
-    gist: "褐藻糖膠 2–5%，再加上洋甘菊、辛夷、甘草提取物中的一種或以上，合計 5–17%。",
+    gist: "封閉式乳霜，各成分是固定重量百分比，不是摘要寫的擇一添加。",
     parts: [
-      P("褐藻糖膠", { kind: "other", min: 2, max: 5, unit: "重量%" }),
-      P("洋甘菊", { required: false, label: "洋甘菊提取物" }),
-      P("辛夷", { required: false, label: "辛夷提取物" }),
-      P("甘草", { required: false, label: "甘草提取物", kind: "isolate" })
+      P("褐藻糖膠", { kind: "other", min: 2, max: 2, unit: "重量%" }),
+      P("洋甘菊", { label: "洋甘菊提取物", kind: "isolate", min: 1, max: 1, unit: "重量%" }),
+      P("辛夷", { label: "辛夷提取物", kind: "isolate", min: 1, max: 1, unit: "重量%" }),
+      P("甘草", { label: "甘草提取物", kind: "isolate", min: 1, max: 1, unit: "重量%" }),
+      P("荊芥", { label: "荊芥提取物", kind: "isolate", min: 1, max: 1, unit: "重量%" }),
+      P("三白草", { label: "三白草提取物", kind: "isolate", min: 1, max: 1, unit: "重量%" }),
+      P("榆樹", { label: "榆樹提取物", kind: "isolate", min: 1, max: 1, unit: "重量%" }),
+      P("土茯苓", { label: "土茯苓提取物", kind: "isolate", min: 1, max: 1, unit: "重量%" }),
+      P("銀杏", { label: "銀杏葉提取物", kind: "isolate", min: 0.5, max: 0.5, unit: "重量%" }),
+      P("杏仁", { label: "杏仁提取物", kind: "isolate", min: 0.5, max: 0.5, unit: "重量%" })
     ]
   },
   {
@@ -878,7 +931,7 @@ const DB = [
     title: "一種用於治療特應性皮炎的外用中藥組合物及其製備方法和應用",
     jurisdiction: "CN",
     status: "公開未授權",
-    statusNote: "這裡的號碼是轉載頁上的申請號，不是公開號。請到 CNIPA 用申請號覆核公開號與法律狀態。",
+    statusNote: "轉載頁路徑裡的 202111505028 用 Google Patents 查不到公開文本（404）。不能把它當成已確認的公開號或授權號。CN114344423A 是另一張方（土茯苓、山藥、連翹等），不是這張沙棘外用方。法律狀態未知。",
     filed: "2021",
     published: "",
     granted: "",
@@ -907,7 +960,7 @@ const DB = [
     title: "一種治療特應性皮炎的中藥組合物及其製備方法和應用",
     jurisdiction: "CN",
     status: "公開未授權",
-    statusNote: "號碼是轉載頁上的申請號。轉載頁發布日期 2022-01-29。請以 CNIPA 覆核公開號。實施例為灌胃，請求項劑型含口服與外用。",
+    statusNote: "轉載頁路徑裡的 202111506892 用 Google Patents 查不到公開文本。公開號與法律狀態都還沒確認，不能當成已授權。轉載頁有麻黃連翹赤小豆加減的組成文字，那是先前技術線索，不是已核對的授權請求項。",
     filed: "",
     published: "2022-01-29",
     granted: "",
@@ -954,7 +1007,22 @@ const ALIASES = {
   "川芎": ["川芎"],
   "丹參": ["丹參","丹参"],
   "防風": ["防風","防风"],
-  "白芍": ["白芍"],
+  "白芍": ["白芍","白芍總苷","白芍总苷"],
+  "車前子": ["車前子","车前子"],
+  "車前草": ["車前草","车前草"],
+  "蓮子": ["蓮子","莲子","蓮子心","莲子心"],
+  "澤瀉": ["澤瀉","泽泻"],
+  "羌活": ["羌活"],
+  "附子": ["附子","製附子","制附子"],
+  "桂枝": ["桂枝"],
+  "豬苓": ["豬苓","猪苓"],
+  "蒼耳子": ["蒼耳子","苍耳子"],
+  "桑葉": ["桑葉","桑叶"],
+  "胡麻仁": ["胡麻仁","火麻仁"],
+  "白扁豆": ["白扁豆","扁豆"],
+  "乾薑": ["乾薑","干姜","乾姜"],
+  "雷公藤": ["雷公藤","雷公藤多苷","雷公藤多甙"],
+  "紅活麻": ["紅活麻","红活麻"],
   "赤芍": ["赤芍"],
   "柴胡": ["柴胡"],
   "黃芪": ["黃芪","黃耆","黄芪"],
@@ -977,6 +1045,13 @@ const ALIASES = {
   "黃精": ["黃精","黄精"],
   "白礬": ["白礬","白矾","明礬"],
   "煅石膏": ["煅石膏","熟石膏"],
+  "百部": ["百部"],
+  "三白草": ["三白草"],
+  "榆樹": ["榆樹","榆白皮","榆皮"],
+  "土茯苓": ["土茯苓"],
+  "銀杏": ["銀杏","銀杏葉"],
+  "杏仁": ["杏仁"],
+  "氧化鋅": ["氧化鋅","氧化锌"],
   "滑石": ["滑石","滑石粉"],
   "冰片": ["冰片","梅片","borneol"],
   "凡士林": ["凡士林","vaseline"],
@@ -1317,8 +1392,409 @@ function selfTest() {
   return out;
 }
 
+const LEGAL = [
+  {
+    ids: ["TWI746701B"],
+    bucket: "trio",
+    tag: "三地頁面都標有效",
+    title: "環己烯酮治療或減輕異位性皮炎（國鼎）。不是中藥復方。",
+    form: "用途／治療方法",
+    twShort: "TWI746701B，分類 active，狀態文字空白",
+    cnShort: "CN110088073B，Active，屆滿欄 2037-11-17",
+    usShort: "US11364209B2，Active，屆滿欄 2037-11-17",
+    tw: "台灣：授權號 TWI746701B。Google 把這筆分類為 active，法律狀態文字是空白，沒有印屆滿日。不能單憑空白文字代替智慧局登記簿。",
+    cn: "中國：CN110088073B 頁面標 Active，屆滿日欄 2037-11-17。獨立請求項是該環己烯酮或其藥學上可接受的鹽，在製備治療或減輕受試者異位性皮炎症狀的藥物上的用途。",
+    us: "美國：US11364209B2 頁面標 Active，屆滿日欄 2037-11-17。獨立請求項是對受試者給藥治療有效量的該環己烯酮，或其藥學上可接受的鹽、代謝物、溶劑合物或前藥，以治療或減輕異位性皮炎症狀。這條方法請求項沒有把人類排除在外。",
+    scope: "保護的是特定化學結構的環己烯酮，不是飲片處方。同族還有歐洲、日本、韓國等授權，這次只核台、中、美。"
+  },
+  {
+    ids: ["US11666619B2"],
+    bucket: "right",
+    tag: "美國仍有效，沒有台、中同族",
+    title: "黃柏、荊芥穗、苦參、甘草、麥門冬、乾地黃的熱水萃取物",
+    form: "組合物開放、萃取物封閉；治療方法排除人類",
+    twShort: "未見同族",
+    cnShort: "未見同族",
+    usShort: "US11666619B2，Active，屆滿欄 2040-08-21",
+    tw: "台灣：同族清單沒有台灣案。",
+    cn: "中國：同族清單沒有中國案。",
+    us: "美國：US11666619B2 頁面標 Active，調整後屆滿日欄 2040-08-21。韓國 KR101782268B1、歐洲 EP3508210B1 同頁標 Active，不在這次三地範圍。PCT WO2018044122A1 標 Ceased。",
+    scope: "五個獨立請求項都鎖在同一組熱水萃取：黃柏、荊芥穗、苦參、甘草、麥門冬（Liriope）、乾地黃，重量比 1:1:1:1:1:1。請求項 1 是預防或治療異位性皮炎的醫藥組合物，組合物本身用 comprising，活性成分是由這六味組成的混合萃取物或其餾分。請求項 5 是治療方法，明文排除人類。請求項 6 是改善用食品，組合物用 comprising。請求項 7 是類藥品，請求項 8 是化妝品，活性萃取物都寫 consisting of 這六味。從屬項再限 0.001–80% 與劑型。"
+  },
+  {
+    ids: ["CN103393981B"],
+    bucket: "right",
+    tag: "只有中國，頁面標仍有效",
+    title: "炒白朮等九味，治療特應性皮炎、濕疹",
+    form: "封閉式組合物",
+    twShort: "未見同族",
+    cnShort: "CN103393981B，Active，屆滿欄 2033-07-31",
+    usShort: "未見同族",
+    tw: "台灣：未見同族。",
+    cn: "中國：頁面標 Active，屆滿日欄 2033-07-31。權利人欄與申請時不同，可能已轉讓。",
+    us: "美國：未見同族。",
+    scope: "獨立請求項以「由下列原藥材製成」封閉：炒白朮 8–15、太子參 8–15、山藥 8–20、薏苡仁 10–25、白茅根 8–20、連翹 8–15、生甘草 3–7、白鮮皮 8–15、珍珠粉 0.1–0.6 重量份。這個圈比摘要窄。"
+  },
+  {
+    ids: ["CN103520572B"],
+    bucket: "none",
+    tag: "中國頁面記載因年費消滅",
+    title: "約三十五味的大復方",
+    form: "封閉式組合物；權利頁面記載已消滅",
+    twShort: "未見同族",
+    cnShort: "CN103520572B，Expired - Fee Related",
+    usShort: "未見同族",
+    tw: "台灣：未見同族。",
+    cn: "中國：頁面法律狀態 Expired - Fee Related，屆滿日欄 2033-10-18。這是頁面記載的年費消滅，不是還能禁止別人實施的權利。公開文本仍是先前技術。",
+    us: "美國：未見同族。",
+    scope: "只剩一個獨立請求項，封閉列出黃連、黃柏、苦參、地榆、石榴皮、地膚子、黃芪、白朮、當歸、何首烏、白芍、川芎、荊芥、防風、鉤藤、甘草、沙參、薏苡仁、茯苓、生地、赤芍、地骨皮、廊茵、天花粉、黃芩、知母、麥冬、大苞芹、木瓜、丹參、雞血藤、蒺藜、十大功勞、凌霄花、千里光，各約 10–20 或 10–25 重量份。藥名「廊茵」「大苞芹」照授權文本，沒有改寫。"
+  },
+  {
+    ids: ["CN104771515B"],
+    bucket: "right",
+    tag: "只有中國，頁面標仍有效",
+    title: "濕疹外洗，十七味",
+    form: "封閉式外洗",
+    twShort: "未見同族",
+    cnShort: "CN104771515B，Active，屆滿欄 2035-04-24",
+    usShort: "未見同族",
+    tw: "台灣：未見同族。",
+    cn: "中國：頁面標 Active，屆滿日欄 2035-04-24。標題是濕疹，不是異位性皮炎。",
+    us: "美國：未見同族。",
+    scope: "獨立請求項是封閉式外洗。摘要的十四味之外，授權文本還固定萆薢 10 克、百部 10 克、荊芥 10 克。其餘為苦參 10–30、蛇床子 10–15、地膚子 10–15、白鮮皮 10–30、白花蛇舌草 15–20、黃芩 10–15、黃柏 6–10、牛蒡子 10–15、野菊花 10–15、蒲公英 15–20、紫花地丁 15–30、蒼朮 10–15、龍膽 10–15、甘草 9–12 克。"
+  },
+  {
+    ids: ["CN106176784B"],
+    bucket: "right",
+    tag: "只有中國，頁面標仍有效",
+    title: "七種成分的皮炎組合物",
+    form: "成分組合物，不是飲片復方",
+    twShort: "未見同族",
+    cnShort: "CN106176784B，Active，屆滿欄 2036-07-18",
+    usShort: "未見同族",
+    tw: "台灣：未見同族。",
+    cn: "中國：頁面標 Active，屆滿日欄 2036-07-18。適應症寫皮炎，不是異位性皮炎標題。",
+    us: "美國：未見同族。",
+    scope: "請求項 1 是組合物：苦參鹼 3–20、蛇床子素 1–10、地膚子皂苷 Ic 2–15、丹皮酚 3–20、甘草酸 8–40、薄荷醇 10–48、紅沒藥醇 5–30 重量份。請求項 9 是另一個獨立的製法請求項，把區間收窄為苦參鹼 5–15、蛇床子素 1–6、地膚子皂苷 Ic 2–10、丹皮酚 5–15、甘草酸 15–30、薄荷醇 25–45、紅沒藥醇 8–25，並在溶劑中混合。外圍以請求項 1 為準。"
+  },
+  {
+    ids: ["CN106822339B"],
+    bucket: "none",
+    tag: "中國頁面記載因年費消滅",
+    title: "魚腥草等七味，兒童濕疹",
+    form: "封閉式組合物；權利頁面記載已消滅",
+    twShort: "未見同族",
+    cnShort: "CN106822339B，Expired - Fee Related",
+    usShort: "未見同族",
+    tw: "台灣：未見同族。",
+    cn: "中國：授權號 CN106822339B，頁面 Expired - Fee Related，屆滿日欄 2037-04-02。公開文本仍是先前技術。",
+    us: "美國：未見同族。",
+    scope: "獨立請求項以「由以下原料藥製成」封閉：魚腥草 20–240、黃柏 20–180、大青葉 7–60、茵陳 7–60、紫蘇葉 5–45、丁香 5–45、五味子 4–30 重量份。"
+  },
+  {
+    ids: ["CN108853272B"],
+    bucket: "right",
+    tag: "只有中國，頁面標仍有效",
+    title: "紫草炭軟膏，連製法一起限定",
+    form: "封閉式軟膏加特定製法",
+    twShort: "未見同族",
+    cnShort: "CN108853272B，Active，屆滿欄 2038-09-25",
+    usShort: "未見同族",
+    tw: "台灣：未見同族。",
+    cn: "中國：頁面標 Active，屆滿日欄 2038-09-25。",
+    us: "美國：未見同族。",
+    scope: "獨立請求項以「由以下重量份製成」封閉：紫草炭 60–80、黃柏 70–90、冬瓜子油 300–400、紅花 20–30、紫花地丁 30–50、蜂蠟 60–80。製法也寫進同一條：黃柏與紫花地丁水煎兩次，藥渣加紅花再煎，合併冷凍乾燥到原體積 25% 的浸膏；紫草燒至冒青煙、外焦內未焦，磨成 100–120 目；蜂蠟 70–80°C 熔化；浸膏、紫草炭細粉與冬瓜子油混合後加蜂蠟，0–4°C 冷卻 12 小時。紫花地丁就在授權文本裡。"
+  },
+  {
+    ids: ["CN112870286B"],
+    bucket: "right",
+    tag: "只有中國，頁面標仍有效",
+    title: "血虛風燥方，授權區間比摘要窄",
+    form: "封閉式；六味下限為 0",
+    twShort: "未見同族",
+    cnShort: "CN112870286B，Active，屆滿欄 2041-03-18",
+    usShort: "未見同族",
+    tw: "台灣：未見同族。",
+    cn: "中國：頁面標 Active，屆滿日欄 2041-03-18。",
+    us: "美國：未見同族。",
+    scope: "獨立請求項封閉，基本十五味是較窄區間：生地黃 18–22、雞血藤 13–16、當歸 8–12、川芎 8–12、丹參 18–23、萆薢 13–16、防風 8–13、炒蒺藜 10–13、白朮 13–18、柴胡 8–13、白芍 13–16、牡蠣 25–30、茯神 17–23、白鮮皮 12–17、甘草 8–12。鉤藤 0–15、地膚子 0–15、珍珠母 0–30、酸棗仁 0–30、桃仁 0–10、紅花 0–10，下限為 0，等於可以不加。"
+  },
+  {
+    ids: ["CN113041296B"],
+    bucket: "right",
+    tag: "只有中國，頁面標仍有效",
+    title: "泡澡、外膏、內服必須一起用",
+    form: "封閉式，A+B+C 同時構成一件發明",
+    twShort: "未見同族",
+    cnShort: "CN113041296B，Active，屆滿欄 2041-05-07",
+    usShort: "未見同族",
+    tw: "台灣：未見同族。",
+    cn: "中國：頁面標 Active，屆滿日欄 2041-05-07。",
+    us: "美國：未見同族。",
+    scope: "獨立請求項寫組合物「由中藥 A、中藥 B 和中藥 C 組成」，三條途徑都在同一條裡。A 泡澡：紫草 27–39、連翹 13–22、蟬蛻 18–28、烏蛇 18–28、地膚子 9–17、白癬皮 13–22、苦參 16–25、金銀花 7–15、當歸 9–17、丹參 7–15。B 塗擦：黃柏 4–11、白礬 3–10、煅石膏 2–9、滑石粉 1.5–8、冰片 0.5–7、凡士林 80–100。C 內服：黃精 13–22、金銀花 7–15、甘草 9–17、枸杞子 11–20、人參 8–16、白芷 5–12、茯苓 5–12。只做其中一條途徑，對不上這條獨立請求項。"
+  },
+  {
+    ids: ["CN113384636B"],
+    bucket: "right",
+    tag: "只有中國，頁面標仍有效",
+    title: "七味顆粒外用，兒童特應性皮炎",
+    form: "封閉式顆粒",
+    twShort: "未見同族",
+    cnShort: "CN113384636B，Active，屆滿欄 2041-07-28",
+    usShort: "未見同族",
+    tw: "台灣：未見同族。",
+    cn: "中國：頁面標 Active，屆滿日欄 2041-07-28。",
+    us: "美國：未見同族。",
+    scope: "獨立請求項以「由以下原料製備而成」封閉，而且寫的是顆粒：金銀花顆粒 15–35、桑白皮顆粒 15–30、甘草顆粒 5–10、馬齒莧顆粒 20–40、地骨皮顆粒 15–30、薄荷顆粒 7.5–15、燙狗脊顆粒 10–20。"
+  },
+  {
+    ids: ["CN113679765A", "WO2023051028A1"],
+    bucket: "none",
+    tag: "中國仍在審查，沒有排他權",
+    title: "白鮮皮溶媒萃取物",
+    form: "申請中的開放式萃取物",
+    twShort: "未見同族",
+    cnShort: "CN113679765A，Pending",
+    usShort: "未見同族",
+    tw: "台灣：未見同族。",
+    cn: "中國：CN113679765A 頁面標 Pending。公開本身是先前技術，還沒有已授權的排他權。",
+    us: "美國：未見同族。同族 WO2023051028A1 標 Ceased。",
+    scope: "獨立請求項很寬：具有抗炎、抗過敏、抗刺激及／或止癢效果的白鮮皮萃取物，以溶媒萃取製備。它沒有把異位性皮炎寫成唯一用途，也沒有限定藥味組合。"
+  },
+  {
+    ids: ["CN115054662B", "WO2024000914A1"],
+    bucket: "right",
+    tag: "中國授權仍有效；PCT 已停",
+    title: "生地、梔子為君的擇一復方",
+    form: "封閉底方，臣藥與佐藥各有替代組合",
+    twShort: "未見同族",
+    cnShort: "CN115054662B，Active，屆滿欄 2042-06-30",
+    usShort: "未見同族",
+    tw: "台灣：未見同族。",
+    cn: "中國：CN115054662B 頁面標 Active，屆滿日欄 2042-06-30。授權獨立請求項與 WO 的擇一結構一致，沒有再收成單一固定配方。",
+    us: "美國：未見同族。WO2024000914A1 本身標 Ceased。",
+    scope: "君藥固定：生地 10–30、梔子 5–25。臣藥是 A 或 B：A 為玄參 5–20 加淡竹葉 5–15；B 為這兩味再加雞內金 5–15、檳榔 5–10 的一種或兩種。佐藥是 C 或 D：C 為鉤藤 5–20、白茅根 10–30、山楂 5–15；D 為這三味再加金銀花、麥芽、地骨皮、燈心草、馬齒莧、連翹、牡蠣、陳皮、茯苓其中一味或以上，各有重量份。適應症寫水虧心火證的特應性皮炎。"
+  },
+  {
+    ids: ["CN115154547B"],
+    bucket: "none",
+    tag: "中國頁面記載因年費消滅",
+    title: "黃芪、黨參等十一味口服",
+    form: "封閉式；權利頁面記載已消滅",
+    twShort: "未見同族",
+    cnShort: "CN115154547B，Expired - Fee Related",
+    usShort: "未見同族",
+    tw: "台灣：未見同族。",
+    cn: "中國：頁面 Expired - Fee Related，屆滿日欄 2042-07-29。距授權日很近，年費狀態仍應向 CNIPA 覆核。不論權利是否還在，授權文本都是先前技術。",
+    us: "美國：未見同族。",
+    scope: "獨立請求項以「由…組成」封閉，區間比摘要窄：黃芪 9–30、黨參 6–15、熟地黃 6–15、白朮 6–10、茯苓 6–15、麥冬 6–15、五味子 2–5、防風 6–15、黃芩 6–10、陳皮 3–9、炙甘草 3–6。"
+  },
+  {
+    ids: ["CN115969922B"],
+    bucket: "right",
+    tag: "只有中國，頁面標仍有效",
+    title: "除濕糊，兩組配方都含氧化鋅",
+    form: "兩條擇一的封閉配方",
+    twShort: "未見同族",
+    cnShort: "CN115969922B，Active，屆滿欄 2043-02-17",
+    usShort: "未見同族",
+    tw: "台灣：未見同族。",
+    cn: "中國：頁面標 Active，屆滿日欄 2043-02-17。",
+    us: "美國：未見同族。",
+    scope: "兩組封閉配方擇一，都含氧化鋅。一組是青黛 5、五倍子 5、黃連 5、血竭 2.5、地榆 5、馬齒莧 5、蒼朮 5、煅石膏 10、氧化鋅 10。另一組是同一九味，前七味各 20、煅石膏 40、氧化鋅 20。摘要沒有寫氧化鋅。"
+  },
+  {
+    ids: ["CN117100801B"],
+    bucket: "right",
+    tag: "只有中國，頁面標仍有效",
+    title: "黃連、黃芩、黃柏、白鮮皮的特定萃取物",
+    form: "固定比例加兩段溶媒萃取",
+    twShort: "未見同族",
+    cnShort: "CN117100801B，Active，屆滿欄 2042-05-17",
+    usShort: "未見同族",
+    tw: "台灣：這次下載的授權頁同族清單只有中國一件。",
+    cn: "中國：頁面標 Active，屆滿日欄 2042-05-17。",
+    us: "美國：同族清單未見美國案。",
+    scope: "授權獨立請求項不是摘要那個 3–50 的寬區間。它指定黃連 9、黃芩 6、黃柏 6、白鮮皮 9，乙醇浸泡萃取、除去乙醇，再以乙酸乙酯萃取成粉。保護的是這個加工過的萃取物，不是同一四味的粗煎劑。"
+  },
+  {
+    ids: ["KR101291343B1"],
+    bucket: "none",
+    tag: "只在韓國仍有效",
+    title: "固定百分比的封閉乳霜",
+    form: "韓文이루어진，封閉式",
+    twShort: "未見同族",
+    cnShort: "未見同族",
+    usShort: "未見同族",
+    tw: "台灣：未見同族。",
+    cn: "中國：未見同族。",
+    us: "美國：未見同族。",
+    scope: "韓國 KR101291343B1 頁面標 Active，屆滿日欄 2031-03-11。請求項 2 已刪除。請求項 1 的法律文本是韓文，不是英文機譯。封閉組成為：褐藻糖膠 2%、洋甘菊萃取 1%、辛夷萃取 1%、甘草萃取 1%、荊芥萃取 1%、三白草萃取 1%、榆樹萃取 1%、土茯苓萃取 1%、銀杏葉萃取 0.5%、杏仁萃取 0.5%、玻尿酸 1.5%、貝他聚葡萄糖 1%、蜂蠟 1%、荷荷芭油 2%、山茶油 2%、白池花籽油 2.5%、DPPG 1.5%、卵磷脂 2%、香料 0.3%，餘量為水。摘要寫成褐藻糖膠再擇一加幾味生藥，和授權請求項不符。"
+  },
+  {
+    ids: ["TW201412323A"],
+    bucket: "none",
+    tag: "台灣只見公開，美國已放棄",
+    title: "掌葉大黃、蛇床、黃芩、甘草酸二鉀、玻尿酸",
+    form: "開放式局部組合物；沒有看到授權",
+    twShort: "TW201412323A，狀態文字空白，不是授權號",
+    cnShort: "未見同族",
+    usShort: "US20150118334A1，Abandoned",
+    tw: "台灣：只有公開號 TW201412323A，沒有看到 B 授權號。同族頁的狀態文字是空白，分類也不是 active。不能把它說成台灣仍有效。",
+    cn: "中國：未見同族。",
+    us: "美國：US20150118334A1 標 Abandoned。歐洲 EP2861239A4 標 Withdrawn，PCT 標 Ceased。",
+    scope: "獨立請求項是局部用組合物，包含掌葉大黃根部萃取物、蛇床果實萃取物、黃芩根部萃取物、甘草酸二鉀、玻尿酸，以及皮膚學可接受的載劑。用字是「包含」，屬於開放式。這是公開文本的請求項，不是已核准的權利範圍。"
+  },
+  {
+    ids: ["TWI851286B"],
+    bucket: "right",
+    tag: "台灣授權號已公開，狀態文字空白",
+    title: "牛蒡加上綠原酸、菊糖與兩種酶",
+    form: "開放式「含有」；用途沒有點名異位性皮炎",
+    twShort: "TWI851286B，分類 active，狀態文字空白",
+    cnShort: "未見同族",
+    usShort: "未見同族",
+    tw: "台灣：授權號 TWI851286B。頁面分類 active，法律狀態文字空白，沒有印屆滿日。技術移轉頁上的 I851286 在 Google Patents 是 404，對得上的文件是 TWI851286B。",
+    cn: "中國：未見同族。",
+    us: "美國：未見同族。",
+    scope: "兩個獨立請求項。其一是抗皮膚發炎藥物，有效成分含有牛蒡，並以總重量計含大於 50 ppm 綠原酸、大於 1% 菊糖，以及多酚氧化酶與過氧化酶合計大於 50 ppm。用字是「含有」。其二是牛蒡用於製備該藥物的用途。適應症清單沒有把異位性皮炎寫成請求項用語。"
+  },
+  {
+    ids: ["US20240216454A1"],
+    bucket: "none",
+    tag: "美國尚未授權",
+    title: "下田菊（Adenostemma lavenia）萃取物",
+    form: "申請中的方法與組合物",
+    twShort: "TW202426022A，狀態未知，是 A 公開",
+    cnShort: "未見同族",
+    usShort: "US20240216454A1，Pending",
+    tw: "台灣：同族是公開號 TW202426022A，狀態文字空白，分類 unknown。這不是授權號，不能說台灣已有排他權。",
+    cn: "中國：未見同族。",
+    us: "美國：US20240216454A1 標 Pending，還沒有授權。同族另有日本 JP7763231B2，頁面標 Active；日本不在這次台、中、美的結論裡。",
+    scope: "美國公開的獨立請求項是：給予下田菊萃取物，以治療異位性皮炎或接觸性皮炎的方法；以及該萃取物加上載體的組合物。這是申請請求項，不是已核准範圍。"
+  },
+  {
+    ids: ["WO2022047726A1"],
+    bucket: "none",
+    tag: "三地都沒有看到仍有效的權利",
+    title: "蒼朮、厚朴等塗抹藥，製法寫進獨立請求項",
+    form: "配方加製法；PCT 已停",
+    twShort: "未見同族",
+    cnShort: "WO 同族沒有中國案；另件 CN110025705A 標 Withdrawn",
+    usShort: "未見同族",
+    tw: "台灣：WO 同族清單沒有台灣案。",
+    cn: "中國：這件 WO 的同族清單只有 WO 自己，標 Ceased，頁面屆滿欄 2023-03-04。說明書背景引過同配方的 CN110025705A，但該案沒有被列成這件的同族，而且 CN110025705A 頁面標 Withdrawn，沒有 B 授權（CN110025705B 為 404）。",
+    us: "美國：未見同族。",
+    scope: "WO 獨立請求項是塗抹藥，配方與製法寫在同一條。配方：蒼朮、陳皮、厚朴、生半夏各 70–90，白芷、茯苓、大腹皮各 110–125，甘草浸膏 5–15 重量份，廣藿香油 0.5–1.2、紫蘇葉油 0.2–0.6 體積份。製法包含：厚朴乙醇回流；蒼朮、陳皮、白芷水蒸餾；大腹皮水煎；茯苓 70–90°C 溫浸；生半夏浸泡，並取生半夏重量 0.06–0.1 倍的乾薑再煎；濃縮到密度 1.10–1.20，加甘草浸膏，回收乙醇，加吐溫 80、廣藿香油、紫蘇葉油與水，氫氧化鈉調 pH 5.8–6.2。請求項 6 把用途寫到銀屑病、特應性皮炎與真菌感染。CN110025705A 的獨立請求項主要是同一配方，沒有把整段製法都寫進請求項 1，而且該申請已撤回。"
+  },
+  {
+    ids: ["CN202111505028"],
+    bucket: "none",
+    tag: "公開號與法律狀態都未確認",
+    title: "沙棘、羊蹄根等外用八味",
+    form: "只有轉載文字，沒有核到授權請求項",
+    twShort: "無法查",
+    cnShort: "Google Patents 以該號碼查無文本",
+    usShort: "無法查",
+    tw: "台灣：沒有可核對的同族。",
+    cn: "中國：轉載頁路徑中的 202111505028 在 Google Patents 是 404。不能把它當成公開號或授權號。CN114344423A 是另一張方（土茯苓、山藥、連翹、大青葉等），不是這張沙棘外用方。",
+    us: "美國：沒有可核對的同族。",
+    scope: "目前只看到國知局文本的轉載，有沙棘、赤芍、生地、蛇床子、白鮮皮、苦參、連翹、羊蹄根的組成。那可以當先前技術線索，但不是已核對的授權請求項，也無法判斷台、中、美是否仍有效。"
+  },
+  {
+    ids: ["CN202111506892"],
+    bucket: "none",
+    tag: "公開號與法律狀態都未確認",
+    title: "麻黃連翹赤小豆加減",
+    form: "只有轉載文字，沒有核到授權請求項",
+    twShort: "無法查",
+    cnShort: "Google Patents 以該號碼查無文本",
+    usShort: "無法查",
+    tw: "台灣：沒有可核對的同族。",
+    cn: "中國：轉載頁路徑中的 202111506892 在 Google Patents 查不到公開文本。公開號與法律狀態都還沒確認。",
+    us: "美國：沒有可核對的同族。",
+    scope: "轉載頁有麻黃連翹赤小豆湯加減的組成與製法敘述。那是先前技術線索，不是已核對的授權請求項。"
+  }
+];
+
+const LEGAL_BY = {};
+LEGAL.forEach(function (item) {
+  item.ids.forEach(function (id) { LEGAL_BY[id] = item; });
+});
+
+function renderLegal(which) {
+  const box = document.getElementById("legal-list");
+  if (!box) return;
+  const rows = LEGAL.filter(function (item) {
+    if (which === "trio") return item.bucket === "trio";
+    if (which === "right") return item.bucket === "right" || item.bucket === "trio";
+    if (which === "none") return item.bucket === "none";
+    return true;
+  });
+  box.innerHTML = rows.map(function (item) {
+    return "<article class='legal-card'><div class='row'><b>" + escapeHtml(item.ids[0]) + "</b><span class='pill'>" + escapeHtml(item.tag) + "</span></div><p>" + escapeHtml(item.title) + "</p><p class='small muted'>" + escapeHtml(item.form) + "</p><div class='offices'><div><b>台灣</b><br>" + escapeHtml(item.tw) + "</div><div><b>中國</b><br>" + escapeHtml(item.cn) + "</div><div><b>美國</b><br>" + escapeHtml(item.us) + "</div></div><p class='small'>" + escapeHtml(item.scope) + "</p></article>";
+  }).join("") || "<p>這個篩選沒有案件。</p>";
+}
+
+const LIT = [
+  { kind: "drug", name: "外用糖皮質激素", route: "外用", herbs: [], evidence: "美國皮膚科學會 2023 年成人外用治療指引給予強烈建議，並建議中效製劑每週 2 次作維持，以減少復發。", source: "JAAD 2023. DOI 10.1016/j.jaad.2022.12.029" },
+  { kind: "drug", name: "他克莫司軟膏 0.03% 或 0.1%", route: "外用", herbs: [], evidence: "同一份指引強烈建議用於成人異位性皮膚炎。中國濕疹皮炎共識寫明 0.1% 用於成人、0.03% 用於 2 歲以上兒童與成人。", source: "JAAD 2023；中華皮膚科雜誌共識 DOI 10.35541/cjd.20220853" },
+  { kind: "drug", name: "吡美莫司乳膏 1%", route: "外用", herbs: [], evidence: "美國皮膚科學會指引強烈建議用於成人輕至中度異位性皮膚炎。中國共識亦列為 2 歲以上可用的鈣調磷酸酶抑制劑。", source: "JAAD 2023；DOI 10.35541/cjd.20220853" },
+  { kind: "drug", name: "克立硼羅軟膏（crisaborole）", route: "外用", herbs: [], evidence: "磷酸二酯酶 4 抑制劑。美國皮膚科學會指引強烈建議用於成人輕至中度。中國共識寫可用於 2 歲及以上。", source: "JAAD 2023；DOI 10.35541/cjd.20220853" },
+  { kind: "drug", name: "蘆可替尼乳膏 1.5%（ruxolitinib）", route: "外用", herbs: [], evidence: "外用 JAK 抑制劑。美國皮膚科學會 2023 年指引強烈建議用於成人輕至中度。", source: "JAAD 2023. DOI 10.1016/j.jaad.2022.12.029" },
+  { kind: "drug", name: "羅氟司特乳膏 0.15%（roflumilast）", route: "外用", herbs: [], evidence: "另一個外用磷酸二酯酶 4 抑制劑。2025 年美國皮膚科學會聚焦更新建議用於成人輕至中度；綜述寫核准年齡可到 6 歲。", source: "AAD 2025 focused update；Ann Allergy Asthma Immunol 2025, S1081-1206(25)00312-6" },
+  { kind: "drug", name: "他吡那福乳膏（tapinarof）", route: "外用", herbs: [], evidence: "芳香烴受體調節劑。2025 年美國皮膚科學會聚焦更新建議用於成人中至重度；綜述寫核准年齡可到 2 歲。", source: "AAD 2025 focused update；Ann Allergy Asthma Immunol 2025" },
+  { kind: "drug", name: "地法米司特軟膏 1%（difamilast，ADQUEY）", route: "外用", herbs: [], evidence: "磷酸二酯酶 4 抑制劑。美國核准標示寫 2026 年初次核准，用於 2 歲以上輕至中度異位性皮膚炎，一日兩次。", source: "FDA label 219474，2026" },
+  { kind: "drug", name: "度普利尤單抗（dupilumab）", route: "注射", herbs: [], evidence: "抗 IL-4 受體 α。美國皮膚科學會系統治療指引建議用於成人中至重度。2025 年綜述寫美國核准可到 6 個月以上。中國 2022 年共識當時寫的是 6 歲及以上、外用控制不佳者。", source: "JAAD systemic guideline；Ann Allergy Asthma Immunol 2025；DOI 10.35541/cjd.20220853" },
+  { kind: "drug", name: "曲羅蘆單抗（tralokinumab）", route: "注射", herbs: [], evidence: "抗 IL-13。美國皮膚科學會建議用於成人中至重度。2025 年綜述寫核准年齡為 12 歲以上。", source: "AAD systemic guideline；Ann Allergy Asthma Immunol 2025" },
+  { kind: "drug", name: "來瑞組單抗（lebrikizumab）", route: "注射", herbs: [], evidence: "抗 IL-13。2025 年美國皮膚科學會聚焦更新建議用於成人中至重度。綜述寫 2024 年美國核准 12 歲以上中至重度。", source: "AAD 2025 focused update；Ann Allergy Asthma Immunol 2025" },
+  { kind: "drug", name: "奈莫利珠單抗（nemolizumab）", route: "注射", herbs: [], evidence: "抗 IL-31 受體。2025 年美國皮膚科學會聚焦更新建議與外用藥一併用於成人中至重度。綜述寫核准年齡為 12 歲以上。", source: "AAD 2025 focused update；Ann Allergy Asthma Immunol 2025" },
+  { kind: "drug", name: "烏帕替尼（upadacitinib）", route: "口服", herbs: [], evidence: "口服 JAK1 抑制劑。美國皮膚科學會建議用於其他系統治療失敗或不適合時的成人中至重度。綜述寫美國核准 12 歲以上。", source: "AAD systemic / 2025 update；Ann Allergy Asthma Immunol 2025" },
+  { kind: "drug", name: "阿布昔替尼（abrocitinib）", route: "口服", herbs: [], evidence: "口服 JAK1 抑制劑。建議條件與烏帕替尼相同，美國核准 12 歲以上、其他系統治療失敗或不適合時。", source: "AAD 2025 update；Ann Allergy Asthma Immunol 2025" },
+  { kind: "drug", name: "巴瑞替尼（baricitinib）", route: "口服", herbs: [], evidence: "口服 JAK 抑制劑。2025 年美國皮膚科學會聚焦更新給予建議，但註明美國 FDA 未核准其異位性皮膚炎適應症；歐洲有核准。", source: "AAD 2025 focused update" },
+  { kind: "drug", name: "窄波紫外線 B 光療", route: "光療", herbs: [], evidence: "美國皮膚科學會對成人異位性皮膚炎給予有條件建議，並寫現有文獻以窄波 UVB 為主。", source: "AAD phototherapy and systemic guideline" },
+  { kind: "drug", name: "環孢素、甲氨蝶呤、硫唑嘌呤、黴酚酸酯", route: "口服或注射", herbs: [], evidence: "2025 年美國皮膚科學會成人用藥劑量表把這四種傳統免疫調節藥列為可使用的系統藥物，並附劑量範圍。它們不是這波生物製劑的新核准藥。", source: "AAD 2025 focused update dosing table" },
+  { kind: "drug", name: "復方甘草酸苷", route: "口服或注射", herbs: ["甘草"], evidence: "甘草酸製劑。中國濕疹皮炎中西醫結合共識把它列為有抗炎與類激素樣作用的中藥提取物，並提醒水腫、低血鉀。", source: "中華皮膚科雜誌共識 DOI 10.35541/cjd.20220853" },
+  { kind: "drug", name: "白芍總苷", route: "口服", herbs: ["白芍"], evidence: "同一份共識寫對異位性皮炎等有療效報告，用法 0.6 克一次、一日 2 至 3 次，部分人會軟便。", source: "DOI 10.35541/cjd.20220853" },
+  { kind: "drug", name: "雷公藤多苷", route: "口服", herbs: ["雷公藤"], evidence: "同一份共識列為較強的免疫抑制提取物，並寫肝腎、骨髓與生殖毒性，連續使用不宜超過 3 個月，有生育計畫者不建議。", source: "DOI 10.35541/cjd.20220853" },
+  { kind: "herb", name: "厚朴萃取軟膏", route: "外用", herbs: ["厚朴"], evidence: "林口長庚前驅試驗。30 克厚朴以 95% 酒精萃取，加蜜蠟 5 克、凡士林 50 克、橄欖油 45 克；厚朴酚與和厚朴酚合計 4.39 毫克/克。16 人，12 週。第 6 週、第 12 週和停藥一個月，SCORAD 與 DLQI 相對安慰劑有顯著差異。樣本小，期間可短暫用抗組織胺或外用類固醇。", source: "中醫藥雜誌 J Chin Med 33(2):82-97, 2022. DOI 10.6940/JCM.202212_33(2).06" },
+  { kind: "herb", name: "青黛軟膏（Lindioil）", route: "外用", herbs: ["青黛"], evidence: "長庚隨機雙盲試驗，每克軟膏含靛玉紅 200 微克，一日兩次、6 週。48 人。EASI 平均下降 49.9%，安慰劑 19.6%（P=0.0235）。登記號 NCT02669888。", source: "J Ethnopharmacol 2020;250:112477. PMID 31838180" },
+  { kind: "herb", name: "培土清心方", route: "口服", herbs: ["太子參", "連翹", "燈心草", "淡竹葉", "生地黃", "白朮", "山藥", "薏苡仁", "鉤藤", "牡蠣", "防風", "甘草"], evidence: "廣東省標準對心火脾虛證的推薦底方，用字含炒白朮、生地、生牡蠣、炙甘草。註冊隨機試驗也測過培土清心顆粒或湯劑；公開報導的院內顆粒組成較短，少了生地、白朮、防風。這裡收的是標準印出的底方。", source: "DB44/T 2259—2020；Dermatologic Therapy 2025. DOI 10.1155/dth/9920370" },
+  { kind: "herb", name: "三心導赤飲", route: "口服", herbs: ["連翹", "梔子", "蓮子", "燈心草", "生地黃", "淡竹葉", "車前草", "車前子", "蟬蛻", "赤小豆", "甘草"], evidence: "同一份廣東省標準對心脾積熱證的推薦底方。連翹、梔子、蓮子在標準裡寫的是心。", source: "DB44/T 2259—2020" },
+  { kind: "herb", name: "小兒化濕湯與參苓白朮散（標準合併列出）", route: "口服", herbs: ["蒼朮", "茯苓", "麥芽", "陳皮", "澤瀉", "滑石", "甘草", "白朮", "薏苡仁", "太子參", "白扁豆", "山藥"], evidence: "標準對脾虛濕蘊證同時點名這兩張方，並印出上述合併組方，含炒麥芽、炒白朮、炒薏苡仁、炙甘草。", source: "DB44/T 2259—2020" },
+  { kind: "herb", name: "消風散", route: "口服", herbs: ["荊芥", "苦參", "知母", "蒼朮", "羌活", "蟬蛻", "防風", "牛蒡子", "生地黃", "胡麻仁", "茯苓", "石膏", "當歸", "甘草"], evidence: "標準對風濕熱蘊證的推薦底方。石膏在標準裡寫生石膏。", source: "DB44/T 2259—2020" },
+  { kind: "herb", name: "健脾潤膚湯", route: "口服", herbs: ["黨參", "茯苓", "白朮", "蒼朮", "當歸", "丹參", "雞血藤", "赤芍", "白芍", "生地黃", "陳皮"], evidence: "標準對脾虛血燥證的推薦底方。同證可選用潤燥止癢膠囊。", source: "DB44/T 2259—2020" },
+  { kind: "herb", name: "真武湯或五苓散加減（標準合併列出）", route: "口服", herbs: ["附子", "茯苓", "白芍", "乾薑", "白朮", "桂枝", "豬苓", "澤瀉"], evidence: "標準對脾腎陽虛證把兩張方的藥味併列。不是每位病人都用完全部八味。", source: "DB44/T 2259—2020" },
+  { kind: "herb", name: "黃精、金銀花、甘草外洗", route: "外用", herbs: ["黃精", "金銀花", "甘草"], evidence: "標準對外洗寫了兩組比例：滲出時黃精 15 克、金銀花 30 克、甘草 15 克；無滲液時三味各 15 克。", source: "DB44/T 2259—2020" },
+  { kind: "herb", name: "滲出濕敷用藥", route: "外用", herbs: ["黃柏", "地榆", "馬齒莧", "野菊花"], evidence: "標準寫黃柏、生地榆、馬齒莧、野菊花水煎冷濕敷。間隔期可搽甘草油、紫草油、青黛油或黃連油。", source: "DB44/T 2259—2020" },
+  { kind: "herb", name: "肥厚皮損的熏洗用藥", route: "外用", herbs: ["蒼耳子", "地膚子", "蛇床子", "苦參", "百部", "黃精"], evidence: "標準對乾燥、脫屑、肥厚苔蘚樣皮損列出的熏洗藥味。另寫 5%–10% 黃連軟膏可外搽或封包。", source: "DB44/T 2259—2020" },
+  { kind: "herb", name: "潤燥止癢膠囊", route: "口服", herbs: ["何首烏", "生地黃", "桑葉", "苦參", "紅活麻"], evidence: "藥品說明書成分為何首烏、制何首烏、生地黃、桑葉、苦參、紅活麻。核准功能是血虛風燥的皮膚瘙癢，不是單獨的異位性皮膚炎適應症。廣東省標準在脾虛血燥證把它列為可選中成藥。註冊隨機試驗曾把它加尿素霜，和安慰劑加尿素霜比較。", source: "國藥准字 Z20025030 說明書；DB44/T 2259—2020；DOI 10.1155/dth/9920370" },
+  { kind: "herb", name: "黃連解毒湯", route: "口服", herbs: ["黃連", "黃芩", "黃柏", "梔子"], evidence: "經典四味。韓國註冊隨機試驗裡，黃連解毒湯相對安慰劑的 SCORAD 差異沒有統計意義（35 人）。動物實驗另有屏障蛋白與搔抓行為的報告，那不是人體療效結論。", source: "DOI 10.1155/dth/9920370" },
+  { kind: "herb", name: "外用核心藥：黃柏、苦參、蛇床子、白鮮皮", route: "外用", herbs: ["黃柏", "苦參", "蛇床子", "白鮮皮"], evidence: "2023 年外用中藥系統性綜述納入 20 項隨機試驗，並把川黃柏、苦參、蛇床、白鮮皮列為核心藥。相對安慰劑，輕中度病人的症狀分數較低；證據異質性高。", source: "J Ethnopharmacol 2023;317:116790. DOI 10.1016/j.jep.2023.116790" },
+  { kind: "review", name: "中藥隨機試驗的整體證據", route: "口服或外用", herbs: [], evidence: "2023 年統合 17 項隨機試驗、1624 人：中藥合併現代治療的總有效率較高、復發率較低；EASI、生活品質與不良事件沒有顯著差異。2025 年只收註冊試驗的綜述納入 7 項、862 人，認為還不足以改寫臨床指引。2026 年證據地圖收到 250 項隨機試驗，方法品質參差。", source: "J Dermatolog Treat 2023. DOI 10.1080/09546634.2023.2268766；DOI 10.1155/dth/9920370；Integr Med Res 2026. DOI 10.1016/j.imr.2026.101359" },
+  { kind: "review", name: "廣東省特應性皮炎中醫診療指南", route: "內外", herbs: [], evidence: "推薦性地方標準，2020-12-28 發布、2021-03-28 實施。內服按證型給三心導赤飲、培土清心方、消風散、健脾潤膚湯等；外用另列洗方、油劑與中成藥。它是診療建議，不是每一味都有單獨的隨機試驗。", source: "DB44/T 2259—2020" }
+];
+
+function literatureFor(items) {
+  const names = {};
+  (items || []).forEach(function (it) { names[it.name] = true; });
+  return LIT.filter(function (row) {
+    return (row.herbs || []).some(function (h) { return names[normalizeToken(h) || h]; });
+  });
+}
+
+function renderLiterature(which) {
+  const box = document.getElementById("lit-list");
+  if (!box) return;
+  const rows = LIT.filter(function (row) { return which === "all" || row.kind === which; });
+  box.innerHTML = rows.map(function (row) {
+    const herbs = (row.herbs || []).length ? "<p class='small'>成分：" + escapeHtml(row.herbs.join("、")) + "</p>" : "";
+    return "<article class='legal-card'><div class='row'><b>" + escapeHtml(row.name) + "</b><span class='pill'>" + escapeHtml(row.route) + "</span></div><p class='small'>" + escapeHtml(row.evidence) + "</p>" + herbs + "<p class='small muted'>" + escapeHtml(row.source) + "</p></article>";
+  }).join("") || "<p>這個篩選沒有資料。</p>";
+}
+
 function boot() {
-  const views = ["overview", "formula", "db", "herbs", "help"];
+  const views = ["overview", "formula", "db", "legal", "lit", "herbs", "help"];
   function show(name) {
     views.forEach(function (v) {
       document.getElementById("view-" + v).classList.toggle("hide", v !== name);
@@ -1351,7 +1827,7 @@ function boot() {
     return "<div style='margin:8px 0'><div class='row' style='justify-content:space-between'><span>" + escapeHtml(h.name) + "</span><span class='small muted'>" + h.core + " 件核心案</span></div><div class='bar'><i style='width:" + Math.round(h.core / maxCore * 100) + "%'></i></div></div>";
   }).join("");
 
-  document.getElementById("scope-note").textContent = "本檔內建 " + DB.length + " 件，整理日 " + BUILT_AT + "。來源是 Google Patents、技術轉移頁與國知局文本轉載。兩件中國案目前只核到申請號。CN108853272B 的藥味來自另一件國際公開的引述。台灣案件很少，不代表台灣沒有其他相關申請。";
+  document.getElementById("scope-note").textContent = "本檔內建 " + DB.length + " 件專利，整理日 " + BUILT_AT + "。已下載的授權文本，獨立請求項與台、中、美同族寫在「請求項與同族」。非專利的藥物與中藥成分寫在「非專利文獻」，沒有併入專利分數。兩件轉載路徑上的號碼在 Google Patents 查無公開文本。台灣案件很少，不代表台灣沒有其他相關申請。";
 
   const formulaBox = document.getElementById("formula");
   const saved = localStorage.getItem("adHerbFormulaDraft");
@@ -1405,11 +1881,23 @@ function boot() {
       if (hit.processNotes.length) html += "<div class='small'>" + escapeHtml(hit.processNotes.join("；")) + "</div>";
       if (hit.amountNotes.length) html += "<div class='small'>" + escapeHtml(hit.amountNotes.join("；")) + "</div>";
       if (/二手|申請號|未經/.test(p.confidence)) html += "<div class='small muted'>資料注意：" + escapeHtml(p.confidence) + "</div>";
+      const law = LEGAL_BY[p.id];
+      if (law) html += "<div class='small'>台／中／美：" + escapeHtml(law.twShort) + "；" + escapeHtml(law.cnShort) + "；" + escapeHtml(law.usShort) + "</div>";
       html += "<div class='small'><a href='" + escapeHtml(p.url) + "' target='_blank' rel='noopener'>" + escapeHtml(p.url) + "</a></div></div>";
       lines.push(title + " [" + hit.score + "] " + RELATION_TEXT[hit.relation] + " 重疊:" + hit.shared.join("、"));
     });
     if (!res.hits.length) html += "<p>沒有對上的藥味。</p>";
     html += "<p class='small muted'>分數只用來排序。80 分以上代表組合幾乎相同，不是核准機率。</p>";
+    const litHits = literatureFor(res.parsed.items);
+    if (litHits.length) {
+      html += "<h3>已發表文獻裡也有這些藥</h3><p class='small'>這段不計入上面的分數。指南、論文和藥品說明書都是公開文獻。</p>";
+      litHits.slice(0, 8).forEach(function (row) {
+        const shared = (row.herbs || []).filter(function (h) {
+          return res.parsed.items.some(function (it) { return it.name === (normalizeToken(h) || h); });
+        });
+        html += "<div class='hit'><b>" + escapeHtml(row.name) + "</b><div class='small'>" + escapeHtml(row.evidence) + "</div><div class='small muted'>對上：" + escapeHtml(shared.join("、")) + "</div></div>";
+      });
+    }
     box.innerHTML = html;
     lastReport = [
       "異位性皮膚炎中草藥專利工作集",
@@ -1475,7 +1963,9 @@ function boot() {
     const blocks = allParts(p).map(function (u) {
       return "<h3>" + escapeHtml(u.group || "組成") + " · " + escapeHtml(u.route) + "</h3><p>" + escapeHtml(fmtParts(u.parts, false)) + "</p>";
     }).join("");
-    document.getElementById("patent-detail").innerHTML = "<div class='panel' style='margin-top:12px'><h2>" + escapeHtml(p.id) + "</h2><p>" + escapeHtml(p.title) + "</p><p class='small'>" + escapeHtml(p.gist) + "</p><p class='small muted'>" + escapeHtml(p.statusNote) + "</p><p class='small'>發明人：" + escapeHtml(p.inventors || "未收錄") + "<br>申請 " + escapeHtml(p.filed || "—") + " · 公開 " + escapeHtml(p.published || "—") + " · 授權 " + escapeHtml(p.granted || "—") + "<br>資料信心：" + escapeHtml(p.confidence) + "</p>" + blocks + "<p><a href='" + escapeHtml(p.url) + "' target='_blank' rel='noopener'>開啟來源頁</a></p></div>";
+    const law = LEGAL_BY[p.id];
+    const lawHtml = law ? "<h3>台、中、美</h3><p class='small'>" + escapeHtml(law.tw) + "</p><p class='small'>" + escapeHtml(law.cn) + "</p><p class='small'>" + escapeHtml(law.us) + "</p><h3>獨立請求項</h3><p class='small'>" + escapeHtml(law.scope) + "</p>" : "";
+    document.getElementById("patent-detail").innerHTML = "<div class='panel' style='margin-top:12px'><h2>" + escapeHtml(p.id) + "</h2><p>" + escapeHtml(p.title) + "</p><p class='small'>" + escapeHtml(p.gist) + "</p><p class='small muted'>" + escapeHtml(p.statusNote) + "</p><p class='small'>發明人：" + escapeHtml(p.inventors || "未收錄") + "<br>申請 " + escapeHtml(p.filed || "—") + " · 公開 " + escapeHtml(p.published || "—") + " · 授權 " + escapeHtml(p.granted || "—") + "<br>資料信心：" + escapeHtml(p.confidence) + "</p>" + blocks + lawHtml + "<p><a href='" + escapeHtml(p.url) + "' target='_blank' rel='noopener'>開啟來源頁</a></p></div>";
     document.getElementById("patent-detail").scrollIntoView({ behavior: "smooth", block: "nearest" });
   }
 
@@ -1500,6 +1990,22 @@ function boot() {
   }
   document.getElementById("herb-q").addEventListener("input", renderHerbs);
   renderHerbs();
+  renderLegal("all");
+  renderLiterature("all");
+  document.querySelectorAll("#lit-filters button").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      document.querySelectorAll("#lit-filters button").forEach(function (b) { b.classList.remove("on"); });
+      btn.classList.add("on");
+      renderLiterature(btn.getAttribute("data-lit"));
+    });
+  });
+  document.querySelectorAll("#legal-filters button").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      document.querySelectorAll("#legal-filters button").forEach(function (b) { b.classList.remove("on"); });
+      btn.classList.add("on");
+      renderLegal(btn.getAttribute("data-legal"));
+    });
+  });
   show("formula");
 }
 
