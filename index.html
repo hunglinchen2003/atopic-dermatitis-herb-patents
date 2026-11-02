@@ -1,0 +1,1509 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>異位性皮膚炎中草藥專利工作集</title>
+<style>
+  :root {
+    --bg: #f3efe6;
+    --ink: #1c1915;
+    --muted: #5e574c;
+    --line: #e2d8c8;
+    --card: #fffdf8;
+    --pine: #1e4a38;
+    --pine-soft: #e7f0eb;
+    --gold: #8d6430;
+    --high: #8d2f2f;
+    --high-bg: #f8e8e4;
+    --mid: #8a5412;
+    --mid-bg: #f8efd8;
+    --low: #1e4a38;
+    --low-bg: #e7f0eb;
+    --shadow: 0 10px 30px rgba(48, 36, 18, 0.06);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: "Segoe UI", "Microsoft JhengHei", "PingFang TC", sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.55;
+  }
+  header {
+    background: var(--pine);
+    color: #f6f3ec;
+    padding: 22px 28px 18px;
+  }
+  header h1 { margin: 0 0 6px; font-size: 26px; font-weight: 650; letter-spacing: 0.01em; }
+  header p { margin: 0; max-width: 920px; color: #d7e6dc; font-size: 14.5px; }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 18px 22px 48px; }
+  nav { display: flex; gap: 8px; flex-wrap: wrap; margin: 16px 0; }
+  nav button, .btn, .ghost {
+    border: 1px solid var(--line);
+    background: var(--card);
+    color: var(--ink);
+    border-radius: 999px;
+    padding: 8px 14px;
+    font: inherit;
+    cursor: pointer;
+  }
+  nav button.active { background: var(--pine); color: white; border-color: var(--pine); }
+  .btn { background: var(--pine); color: white; border-color: var(--pine); border-radius: 8px; }
+  .ghost { border-radius: 8px; }
+  button:hover { filter: brightness(0.98); }
+  .grid { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 16px; }
+  .cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
+  .card, .panel {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    box-shadow: var(--shadow);
+  }
+  .card { padding: 14px 16px; }
+  .card b { display: block; font-size: 26px; color: var(--pine); }
+  .card span { color: var(--muted); font-size: 13px; }
+  .panel { padding: 16px 18px; }
+  h2 { margin: 0 0 10px; font-size: 18px; }
+  h3 { margin: 16px 0 8px; font-size: 15px; }
+  .muted { color: var(--muted); }
+  .small { font-size: 13px; }
+  label { display: block; font-size: 13px; color: var(--muted); margin: 8px 0 4px; }
+  input[type="text"], input[type="search"], select, textarea {
+    width: 100%;
+    font: inherit;
+    color: var(--ink);
+    background: white;
+    border: 1px solid #d9cdb8;
+    border-radius: 8px;
+    padding: 8px 10px;
+  }
+  textarea { min-height: 220px; resize: vertical; line-height: 1.7; }
+  .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .filters { display: grid; grid-template-columns: 1.4fr repeat(4, 0.7fr); gap: 8px; margin-bottom: 10px; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; table-layout: fixed; }
+  th:nth-child(1), td:nth-child(1) { width: 34%; }
+  th:nth-child(2), td:nth-child(2) { width: 18%; }
+  th:nth-child(3), td:nth-child(3) { width: 9%; }
+  .pill { white-space: nowrap; }
+  th, td { text-align: left; padding: 8px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font-size: 12px; color: var(--muted); font-weight: 650; }
+  tr.clickable { cursor: pointer; }
+  tr.clickable:hover { background: #f7f3ea; }
+  .pill {
+    display: inline-block;
+    border-radius: 999px;
+    padding: 1px 8px;
+    font-size: 12px;
+    margin: 0 4px 4px 0;
+    background: #f3ecdf;
+    color: #4d4538;
+  }
+  .pill.core { background: var(--pine-soft); color: var(--pine); }
+  .pill.adj { background: #eeeaf6; color: #4d3f72; }
+  .pill.warn { background: var(--mid-bg); color: var(--mid); }
+  .verdict { border-radius: 14px; padding: 14px 16px; margin-bottom: 12px; }
+  .verdict.high { background: var(--high-bg); color: var(--high); }
+  .verdict.mid { background: var(--mid-bg); color: var(--mid); }
+  .verdict.low { background: var(--low-bg); color: var(--low); }
+  .verdict strong { display: block; font-size: 18px; margin-bottom: 4px; }
+  .bar { height: 8px; background: #efe6d6; border-radius: 99px; overflow: hidden; }
+  .bar i { display: block; height: 100%; background: var(--pine); }
+  .hit { border-top: 1px solid var(--line); padding: 10px 0; }
+  .hit:first-child { border-top: 0; }
+  .split { display: grid; grid-template-columns: 340px 1fr; gap: 16px; }
+  .check { display: flex; gap: 8px; align-items: flex-start; font-size: 13px; color: var(--ink); margin: 8px 0; }
+  .check input { margin-top: 3px; }
+  .hide { display: none; }
+  .tagline { font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #b7d0c4; margin-bottom: 6px; }
+  a { color: var(--pine); }
+  .legend { display: flex; gap: 8px; flex-wrap: wrap; margin: 8px 0 12px; }
+  @media (max-width: 900px) {
+    .grid, .cards, .split, .filters { grid-template-columns: 1fr; }
+  }
+  @media print {
+    header, nav, .noprint { display: none !important; }
+    body { background: white; }
+    .panel, .card { box-shadow: none; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="tagline">Local prior-art workbook</div>
+  <h1>異位性皮膚炎中草藥專利工作集</h1>
+  <p>在這台電腦上瀏覽公開專利、輸入自己的配方，看藥味組合和現有文獻有多接近。這是申請前的初篩，不是專利法律意見，也不是全世界完整檢索。</p>
+</header>
+<div class="wrap">
+  <nav>
+    <button type="button" data-view="overview">總覽</button>
+    <button type="button" data-view="formula" class="active">配方比對</button>
+    <button type="button" data-view="db">專利庫</button>
+    <button type="button" data-view="herbs">藥味地圖</button>
+    <button type="button" data-view="help">怎麼讀結果</button>
+  </nav>
+
+  <section id="view-overview" class="hide">
+    <div class="cards" id="stat-cards"></div>
+    <div class="grid">
+      <div class="panel">
+        <h2>工作集裡最常出現的藥味</h2>
+        <p class="small muted">只計算適應症明確寫到異位性／特應性皮炎的草藥案。一味藥出現很多次，代表用它來主張新穎性會比較擠。</p>
+        <div id="top-herbs"></div>
+      </div>
+      <div class="panel">
+        <h2>這份資料能回答什麼</h2>
+        <p>把配方貼到「配方比對」。工具會把藥名對到標準名，再逐件看：是同一組藥、你的方子含有對方的小複方，還是你的藥只是出現在別人的大復方裡。</p>
+        <p class="small muted">資料日期 2026-11-02。法律狀態以整理當下的公開頁面為準，年費、轉讓和各國生效範圍會變，送件前要再查 CNIPA、TIPO、USPTO 或 Google Patents。</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="view-formula">
+    <div class="split">
+      <div class="panel">
+        <h2>你的配方</h2>
+        <p class="small muted">一行一味。可以寫重量，例如「甘草 6」或「白鮮皮 15g」。炮製請照實寫：生甘草、炙甘草、生地黃、熟地黃會被認成不同線索。</p>
+        <textarea id="formula" spellcheck="false" placeholder="甘草 6&#10;白鮮皮 15&#10;苦參 10&#10;黃柏 10&#10;生地黃 12"></textarea>
+        <label for="route">預期給藥途徑</label>
+        <select id="route">
+          <option>未指定</option>
+          <option>口服</option>
+          <option>外用</option>
+          <option>內外</option>
+        </select>
+        <label class="check"><input type="checkbox" id="use-amounts"> 這些數字是同一種重量單位，用來對照請求項的份量範圍</label>
+        <div class="row">
+          <button type="button" class="btn" id="run">比對工作集</button>
+          <button type="button" class="ghost" id="export-report">匯出這次報告</button>
+        </div>
+        <h3>範例</h3>
+        <div class="row">
+          <button type="button" class="ghost" data-sample="kaju">韓方六味 1:1</button>
+          <button type="button" class="ghost" data-sample="sea">沙棘外用八味</button>
+          <button type="button" class="ghost" data-sample="add">六味再加厚朴</button>
+        </div>
+        <p class="small muted" id="save-note">配方會留在這個瀏覽器裡，不會上傳。</p>
+      </div>
+      <div class="panel" id="result">
+        <h2>比對結果</h2>
+        <p class="muted">輸入配方後按「比對工作集」。</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="view-db" class="hide">
+    <div class="panel">
+      <div class="filters">
+        <input type="search" id="q" placeholder="搜尋專利號、申請人、藥味、標題">
+        <select id="f-jur"><option value="">全部地區</option></select>
+        <select id="f-route">
+          <option value="">全部途徑</option>
+          <option>口服</option>
+          <option>外用</option>
+          <option>內外</option>
+          <option>未載明</option>
+        </select>
+        <select id="f-ind">
+          <option value="">全部適應症</option>
+          <option value="core">明確寫異位性皮炎</option>
+          <option value="adjacent">濕疹、皮炎、止癢等鄰近用途</option>
+        </select>
+        <select id="f-status"><option value="">全部狀態</option></select>
+      </div>
+      <div style="overflow:auto">
+        <table>
+          <thead>
+            <tr><th>文獻</th><th>狀態</th><th>途徑</th><th>必要藥味</th></tr>
+          </thead>
+          <tbody id="patent-rows"></tbody>
+        </table>
+      </div>
+      <div id="patent-detail"></div>
+    </div>
+  </section>
+
+  <section id="view-herbs" class="hide">
+    <div class="panel">
+      <h2>藥味出現在哪些文獻</h2>
+      <input type="search" id="herb-q" placeholder="輸入藥名，例如甘草、白鮮皮">
+      <div id="herb-map"></div>
+    </div>
+  </section>
+
+  <section id="view-help" class="hide">
+    <div class="panel">
+      <h2>怎麼用這份結果判斷能不能申請</h2>
+      <p>專利要同時過新穎性與進步性。新穎性看的是：申請日前，有沒有一份公開文獻已經把「這組藥，用在這個用途」說出來。進步性看的是：就算沒有一份文獻寫得一模一樣，本領域的人是不是把已知的方子改一改就會想到。</p>
+      <h3>工具裡的五種關係</h3>
+      <p><b>同一組藥。</b>對方的必要藥味和你的配方對得起來。以這份工作集來看，再拿同一組藥去申請「治療異位性皮膚炎」的風險高。比例不同可以寫進說明書，但藥味組合本身已經公開。</p>
+      <p><b>飲片對上了成分請求項。</b>藥味來源相同，對方請求的是生物鹼、苷、酸、油或特定炮製品。這不是同一張飲片處方，不過距離很近。</p>
+      <p><b>你的方子含有已知小複方。</b>對方那幾味你全都有，你另外多了藥。多出來的藥是差別。申請時請求項要保護「這個完整組合」，並準備數據說明多出來的藥不是隨便加上去的。</p>
+      <p><b>你的藥被包在大復方裡。</b>對方沒有單獨公開你這個較小組合。這通常還不是「相同組合物已經存在」，但審查意見常會問：從那張大處方刪掉幾味，是不是顯而易見。</p>
+      <p><b>只有部分重疊。</b>甘草、白鮮皮、苦參、黃柏這類藥在皮膚方裡非常常見。只重疊這些，不足以說配方不能申請，也不能說已經可以申請。</p>
+      <h3>這份結果沒有做的事</h3>
+      <p>沒有讀完整份請求項的法律範圍，沒有查同族專利在台灣、中國、美國是否都仍有效，沒有搜尋期刊、學位論文和藥物說明書。公開論文一樣會毀掉新穎性。工作集外的一件文獻，就足以改變結論。</p>
+      <p>權利消滅的專利仍然是先前技術。它不能再禁止別人實施，但別人也不能把同一發明再申請一次。</p>
+      <h3>工作集邊界</h3>
+      <p id="scope-note"></p>
+      <p class="small muted">非專利線索：林口長庚有厚朴萃取物軟膏治療異位性皮膚炎的前驅臨床報告（國家中醫藥研究所刊載）。那不是專利，但是公開文獻。配方若以厚朴為特徵，檢索要把這類論文算進去。本次沒有把論文混進專利比對分數。</p>
+    </div>
+  </section>
+</div>
+<script>
+const BUILT_AT = "2026-11-02";
+
+function P(name, opt) {
+  const o = opt || {};
+  return {
+    name: name,
+    label: o.label || name,
+    kind: o.kind || "herb",
+    required: o.required !== false,
+    role: o.role || "active",
+    min: o.min,
+    max: o.max,
+    unit: o.unit || "",
+    note: o.note || ""
+  };
+}
+function G(name, route, parts) { return { name: name, route: route, parts: parts }; }
+
+const DB = [
+  {
+    id: "CN103393981B",
+    title: "治療特應性皮炎的中藥組合物及其製備方法",
+    jurisdiction: "CN",
+    status: "授權",
+    statusNote: "Google Patents 頁面標 Active，屆滿日欄為 2033-07-31。年費請再查 CNIPA。",
+    filed: "2013-07-31",
+    published: "2013-11-20",
+    granted: "2015-04-15",
+    applicant: "申請時為廣州中醫藥大學第二附屬醫院；頁面現權利人欄出現 Beijing Yuelaixin，權利人可能已變更",
+    inventors: "陳達燦",
+    route: "未載明",
+    indication: "core",
+    indicationText: "特應性皮炎、濕疹",
+    category: "formula",
+    confidence: "已核對摘要與法律狀態頁",
+    url: "https://patents.google.com/patent/CN103393981B/zh",
+    gist: "以白朮、太子參、山藥、薏苡仁、白茅根、連翹、甘草、白鮮皮、珍珠粉組成，用於特應性皮炎與濕疹。",
+    parts: [
+      P("白朮", { min: 5, max: 30, unit: "重量份" }),
+      P("太子參", { min: 5, max: 60, unit: "重量份" }),
+      P("山藥", { min: 5, max: 60, unit: "重量份" }),
+      P("薏苡仁", { min: 10, max: 60, unit: "重量份" }),
+      P("白茅根", { min: 5, max: 60, unit: "重量份" }),
+      P("連翹", { min: 5, max: 30, unit: "重量份" }),
+      P("甘草", { min: 1, max: 10, unit: "重量份" }),
+      P("白鮮皮", { min: 5, max: 30, unit: "重量份" }),
+      P("珍珠", { label: "珍珠粉", min: 0.1, max: 5, unit: "重量份" })
+    ]
+  },
+  {
+    id: "CN103520572B",
+    title: "一種用於治療特應性皮炎的中藥組合物及其製備方法",
+    jurisdiction: "CN",
+    status: "權利消滅（頁面記載）",
+    statusNote: "2015-12-23 授權。頁面法律狀態為 Expired - Fee Related。權利可能已因未繳年費消滅，公開內容仍是先前技術。",
+    filed: "2013-10-18",
+    published: "2014-01-22",
+    granted: "2015-12-23",
+    applicant: "個人申請；發明人後變更為周伯鵬",
+    inventors: "李佃場、梁軼聰（後變更周伯鵬）",
+    route: "未載明",
+    indication: "core",
+    indicationText: "特應性皮炎",
+    category: "formula",
+    confidence: "已核對中文摘要的藥味與份量",
+    url: "https://patents.google.com/patent/CN103520572B/zh",
+    gist: "大復方，摘要列約 35 味，走滋陰清熱、養血潤膚。藥味表中的「廊茵」「大苞芹」依公開摘要原文收錄，未另作考證。",
+    parts: "黃連 10-20|黃柏 10-20|苦參 10-25|地榆 10-20|石榴皮 10-20|地膚子 10-20|黃芪 10-20|白朮 10-20|當歸 10-20|何首烏 10-20|白芍 10-20|川芎 10-20|荊芥 10-20|防風 10-20|鉤藤 10-20|甘草 10-20|沙參 10-20|薏苡仁 10-20|茯苓 10-20|生地黃 10-25|赤芍 10-20|地骨皮 10-20|廊茵 10-20|天花粉 10-25|黃芩 10-20|知母 10-25|麥門冬 10-25|大苞芹 10-25|木瓜 10-20|丹參 10-20|雞血藤 10-20|蒺藜 10-20|十大功勞 10-20|凌霄花 10-20|千里光 10-20".split("|").map(function (s) {
+      const m = s.match(/^(\S+)\s+(\d+)-(\d+)$/);
+      return P(m[1], { min: +m[2], max: +m[3], unit: "重量份" });
+    })
+  },
+  {
+    id: "CN104771515B",
+    title: "一種治療濕疹的外洗藥物及其製備方法",
+    jurisdiction: "CN",
+    status: "授權",
+    statusNote: "頁面標 Active，屆滿日欄 2035-04-24。標題是濕疹，不是異位性皮炎。",
+    filed: "2015-04-24",
+    published: "2015-07-15",
+    granted: "2019-02-22",
+    applicant: "平陰縣中醫醫院",
+    inventors: "李峰、任秀麗、董婧、陶希岩、劉翠翠",
+    route: "外用",
+    indication: "adjacent",
+    indicationText: "濕疹外洗",
+    category: "formula",
+    confidence: "已核對摘要",
+    url: "https://patents.google.com/patent/CN104771515B/zh",
+    gist: "苦參、蛇床子、地膚子、白鮮皮等十四味外洗。屬鄰近皮膚病先前技術。",
+    parts: [
+      P("苦參", { min: 10, max: 30, unit: "克" }),
+      P("蛇床子", { min: 10, max: 15, unit: "克" }),
+      P("地膚子", { min: 10, max: 15, unit: "克" }),
+      P("白鮮皮", { min: 10, max: 30, unit: "克" }),
+      P("白花蛇舌草", { min: 15, max: 20, unit: "克" }),
+      P("黃芩", { min: 10, max: 15, unit: "克" }),
+      P("黃柏", { min: 6, max: 10, unit: "克" }),
+      P("牛蒡子", { min: 10, max: 15, unit: "克" }),
+      P("野菊花", { min: 10, max: 15, unit: "克" }),
+      P("蒲公英", { min: 15, max: 20, unit: "克" }),
+      P("紫花地丁", { min: 15, max: 30, unit: "克" }),
+      P("蒼朮", { min: 10, max: 15, unit: "克" }),
+      P("龍膽", { min: 10, max: 15, unit: "克" }),
+      P("甘草", { min: 9, max: 12, unit: "克" })
+    ]
+  },
+  {
+    id: "CN106176784B",
+    title: "一種用於皮炎的藥物組合物、應用、製劑及其製備方法",
+    jurisdiction: "CN",
+    status: "授權",
+    statusNote: "頁面標 Active。適應症寫蟲咬皮炎、接觸性皮炎。",
+    filed: "2016-07-18",
+    published: "2016-12-07",
+    granted: "2019-01-29",
+    applicant: "成都亞科歐爾生物科技（Chengdu Akeor Biotechnology）",
+    inventors: "趙良彬、劉楊川",
+    route: "未載明",
+    indication: "adjacent",
+    indicationText: "蟲咬皮炎、接觸性皮炎",
+    category: "isolate",
+    confidence: "已核對摘要的成分與份量",
+    url: "https://patents.google.com/patent/CN106176784B/zh",
+    gist: "請求的是苦參鹼、蛇床子素、地膚子皂苷 Ic、丹皮酚、甘草酸、薄荷醇、紅沒藥醇的成分組合，不是飲片復方。",
+    parts: [
+      P("苦參", { label: "苦參鹼", kind: "isolate", min: 3, max: 20, unit: "重量份" }),
+      P("蛇床子", { label: "蛇床子素", kind: "isolate", min: 1, max: 10, unit: "重量份" }),
+      P("地膚子", { label: "地膚子皂苷 Ic", kind: "isolate", min: 2, max: 15, unit: "重量份" }),
+      P("牡丹皮", { label: "丹皮酚", kind: "isolate", min: 3, max: 20, unit: "重量份" }),
+      P("甘草", { label: "甘草酸", kind: "isolate", min: 8, max: 40, unit: "重量份" }),
+      P("薄荷", { label: "薄荷醇", kind: "isolate", min: 10, max: 48, unit: "重量份" }),
+      P("紅沒藥醇", { kind: "isolate", min: 5, max: 30, unit: "重量份" })
+    ]
+  },
+  {
+    id: "CN106822339A",
+    title: "一種治療嬰幼兒或兒童濕疹的中藥組合物及其製備方法",
+    jurisdiction: "CN",
+    status: "公開未授權",
+    statusNote: "本次看到的頁面是公開文本 A，未見授權紀錄。說明書療效段把適應症寫成濕疹（特應性皮炎）。",
+    filed: "2017-04-02",
+    published: "2017-06-13",
+    granted: "",
+    applicant: "個人（陳建宏）",
+    inventors: "陳建宏",
+    route: "外用",
+    indication: "core",
+    indicationText: "嬰幼兒或兒童濕疹；說明書對應特應性皮炎",
+    category: "formula",
+    confidence: "已核對摘要與實施例用量",
+    url: "https://patents.google.com/patent/CN106822339A/zh",
+    gist: "魚腥草、黃柏、大青葉、茵陳、紫蘇葉、丁香、五味子。較佳例為 80、60、20、20、15、15、10 份。",
+    parts: [
+      P("魚腥草", { min: 20, max: 240, unit: "重量份" }),
+      P("黃柏", { min: 20, max: 180, unit: "重量份" }),
+      P("大青葉", { min: 7, max: 60, unit: "重量份" }),
+      P("茵陳", { min: 7, max: 60, unit: "重量份" }),
+      P("紫蘇", { label: "紫蘇葉", min: 5, max: 45, unit: "重量份" }),
+      P("丁香", { min: 5, max: 45, unit: "重量份" }),
+      P("五味子", { min: 4, max: 30, unit: "重量份" })
+    ]
+  },
+  {
+    id: "CN108853272B",
+    title: "一種治療特應性皮炎的外用軟膏",
+    jurisdiction: "CN",
+    status: "授權",
+    statusNote: "授權號採 Patsnap 條目 CN108853272B。組成引自 WO2024000914A1 背景技術對 CN108853272A 的引述，本次未逐字核對請求項。",
+    filed: "",
+    published: "",
+    granted: "",
+    applicant: "本次未核對",
+    inventors: "",
+    route: "外用",
+    indication: "core",
+    indicationText: "特應性皮炎外用軟膏",
+    category: "formula",
+    confidence: "二手引述，紫花地丁這一味請覆核原文",
+    url: "https://patents.google.com/patent/CN108853272B/zh",
+    gist: "引文組成：紫草炭、黃柏、冬瓜仁油、紅花、紫花地丁、蜂蠟。英譯 Purple Flower Dips 暫記為紫花地丁。",
+    parts: [
+      P("紫草", { label: "紫草炭", min: 60, max: 80, unit: "重量份" }),
+      P("黃柏", { min: 70, max: 90, unit: "重量份" }),
+      P("冬瓜子", { label: "冬瓜仁油", min: 300, max: 400, unit: "重量份" }),
+      P("紅花", { min: 20, max: 30, unit: "重量份" }),
+      P("紫花地丁", { min: 30, max: 50, unit: "重量份", note: "英譯對照，請覆核" }),
+      P("蜂蠟", { kind: "other", role: "carrier", min: 60, max: 80, unit: "重量份" })
+    ]
+  },
+  {
+    id: "CN112870286B",
+    title: "治療特應性皮炎的中藥組合物、製備方法及其應用",
+    jurisdiction: "CN",
+    status: "授權",
+    statusNote: "2022-11-11 授權，頁面標 Active。",
+    filed: "2021-03-18",
+    published: "2021-06-01",
+    granted: "2022-11-11",
+    applicant: "河南中醫藥大學第一附屬醫院",
+    inventors: "劉學偉",
+    route: "內外",
+    indication: "core",
+    indicationText: "特應性皮炎，說明書針對血虛風燥",
+    category: "formula",
+    confidence: "已核對摘要",
+    url: "https://patents.google.com/patent/CN112870286B/zh",
+    gist: "基本 15 味內服，鉤藤、地膚子、珍珠母、酸棗仁、桃仁、紅花依症狀選加。說明書寫可做成口服或外用。",
+    parts: [
+      P("生地黃", { min: 10, max: 30, unit: "重量份" }),
+      P("雞血藤", { min: 10, max: 20, unit: "重量份" }),
+      P("當歸", { min: 5, max: 20, unit: "重量份" }),
+      P("川芎", { min: 8, max: 15, unit: "重量份" }),
+      P("丹參", { min: 10, max: 30, unit: "重量份" }),
+      P("萆薢", { min: 10, max: 20, unit: "重量份" }),
+      P("防風", { min: 8, max: 20, unit: "重量份" }),
+      P("蒺藜", { label: "炒蒺藜", min: 5, max: 15, unit: "重量份" }),
+      P("白朮", { min: 10, max: 30, unit: "重量份" }),
+      P("柴胡", { min: 8, max: 15, unit: "重量份" }),
+      P("白芍", { min: 8, max: 20, unit: "重量份" }),
+      P("牡蠣", { min: 15, max: 30, unit: "重量份" }),
+      P("茯神", { min: 10, max: 30, unit: "重量份" }),
+      P("白鮮皮", { min: 10, max: 20, unit: "重量份" }),
+      P("甘草", { min: 6, max: 15, unit: "重量份" }),
+      P("鉤藤", { required: false, min: 0, max: 15, unit: "重量份" }),
+      P("地膚子", { required: false, min: 0, max: 15, unit: "重量份" }),
+      P("珍珠母", { required: false, min: 0, max: 30, unit: "重量份" }),
+      P("酸棗仁", { required: false, min: 0, max: 30, unit: "重量份" }),
+      P("桃仁", { required: false, min: 0, max: 10, unit: "重量份" }),
+      P("紅花", { required: false, min: 0, max: 10, unit: "重量份" })
+    ]
+  },
+  {
+    id: "CN113041296B",
+    title: "一種治療特應性皮炎的中藥組合物",
+    jurisdiction: "CN",
+    status: "授權",
+    statusNote: "2022-07-05 授權，頁面標 Active。",
+    filed: "2021-05-07",
+    published: "2021-06-29",
+    granted: "2022-07-05",
+    applicant: "河南紅葉健康科技有限公司",
+    inventors: "焦晉金、焦首富",
+    route: "內外",
+    indication: "core",
+    indicationText: "特應性皮炎；外洗、外膏與內服一起用",
+    category: "formula",
+    confidence: "已核對說明書的三組組成",
+    url: "https://patents.google.com/patent/CN113041296B/zh",
+    gist: "中藥 A 水浸外洗、中藥 B 凡士林膏、中藥 C 內服煎劑。比對時三組分開看。",
+    groups: [
+      G("中藥A 外洗", "外用", [
+        P("紫草", { min: 27, max: 39, unit: "重量份" }),
+        P("連翹", { min: 13, max: 22, unit: "重量份" }),
+        P("蟬蛻", { min: 18, max: 28, unit: "重量份" }),
+        P("烏梢蛇", { min: 18, max: 28, unit: "重量份" }),
+        P("地膚子", { min: 9, max: 17, unit: "重量份" }),
+        P("白鮮皮", { min: 13, max: 22, unit: "重量份" }),
+        P("苦參", { min: 16, max: 25, unit: "重量份" }),
+        P("金銀花", { min: 7, max: 15, unit: "重量份" }),
+        P("當歸", { min: 9, max: 17, unit: "重量份" }),
+        P("丹參", { min: 7, max: 15, unit: "重量份" })
+      ]),
+      G("中藥B 外膏", "外用", [
+        P("黃柏", { min: 4, max: 11, unit: "重量份" }),
+        P("白礬", { min: 3, max: 10, unit: "重量份" }),
+        P("煅石膏", { min: 2, max: 9, unit: "重量份" }),
+        P("滑石", { label: "滑石粉", min: 1.5, max: 8, unit: "重量份" }),
+        P("冰片", { min: 0.5, max: 7, unit: "重量份" }),
+        P("凡士林", { kind: "other", role: "carrier", min: 80, max: 100, unit: "重量份" })
+      ]),
+      G("中藥C 內服", "口服", [
+        P("黃精", { min: 13, max: 22, unit: "重量份" }),
+        P("金銀花", { min: 7, max: 15, unit: "重量份" }),
+        P("甘草", { min: 9, max: 17, unit: "重量份" }),
+        P("枸杞子", { min: 11, max: 20, unit: "重量份" }),
+        P("人參", { min: 8, max: 16, unit: "重量份" }),
+        P("白芷", { min: 5, max: 12, unit: "重量份" }),
+        P("茯苓", { min: 5, max: 12, unit: "重量份" })
+      ])
+    ]
+  },
+  {
+    id: "CN113384636B",
+    title: "一種外用治療嬰幼兒兒童特應性皮炎的消炎止癢中藥配方及使用方法",
+    jurisdiction: "CN",
+    status: "授權",
+    statusNote: "2022-08-02 授權，頁面標 Active。",
+    filed: "2021-07-28",
+    published: "2021-09-14",
+    granted: "2022-08-02",
+    applicant: "廣東省中醫院",
+    inventors: "陳達燦、林穎、甄慶育、莫秀梅",
+    route: "外用",
+    indication: "core",
+    indicationText: "嬰幼兒兒童特應性皮炎，藥浴外洗",
+    category: "formula",
+    confidence: "已核對授權文本的請求項範圍",
+    url: "https://patents.google.com/patent/CN113384636B/zh",
+    gist: "金銀花、桑白皮、甘草、馬齒莧、地骨皮、薄荷、燙狗脊，溶入溫水泡浴。",
+    parts: [
+      P("金銀花", { min: 15, max: 35, unit: "重量份" }),
+      P("桑白皮", { min: 15, max: 30, unit: "重量份" }),
+      P("甘草", { min: 5, max: 10, unit: "重量份" }),
+      P("馬齒莧", { min: 20, max: 40, unit: "重量份" }),
+      P("地骨皮", { min: 15, max: 30, unit: "重量份" }),
+      P("薄荷", { min: 7.5, max: 15, unit: "重量份" }),
+      P("狗脊", { label: "燙狗脊", min: 10, max: 20, unit: "重量份" })
+    ]
+  },
+  {
+    id: "CN113679765A",
+    title: "白鮮皮提取物及其應用",
+    jurisdiction: "CN",
+    status: "公開未授權",
+    statusNote: "2021-12-10 進入實質審查。本次頁面未見授權。同族公開包含 WO2023051028A1。",
+    filed: "2021-09-30",
+    published: "2021-11-23",
+    granted: "",
+    applicant: "上海家化聯合股份有限公司",
+    inventors: "陳默、孫懿、趙亞、賈海東",
+    route: "外用",
+    indication: "adjacent",
+    indicationText: "抗炎、抗敏、抗刺激、止癢；以 TSLP、FLG 為機制",
+    category: "single",
+    confidence: "已核對摘要。摘要未把特應性皮炎寫成唯一適應症",
+    url: "https://patents.google.com/patent/CN113679765A/zh",
+    gist: "單味白鮮皮提取物，可做成藥品、保健食品或皮膚外用劑。",
+    parts: [ P("白鮮皮", { label: "白鮮皮提取物", kind: "isolate" }) ]
+  },
+  {
+    id: "CN115154547B",
+    title: "一種治療特應性皮炎的中藥組合物",
+    jurisdiction: "CN",
+    status: "權利消滅（頁面記載）",
+    statusNote: "2023-04-28 授權。頁面法律狀態為 Expired - Fee Related。距授權日很近，年費狀態請向 CNIPA 覆核。不論權利是否還在，公開文本都是先前技術。",
+    filed: "2022-07-29",
+    published: "2022-10-11",
+    granted: "2023-04-28",
+    applicant: "河南中醫藥大學",
+    inventors: "趙巍、王藝、趙彩燕",
+    route: "口服",
+    indication: "core",
+    indicationText: "特應性皮炎、濕疹，說明書強調減少復發",
+    category: "formula",
+    confidence: "已核對摘要與實施例",
+    url: "https://patents.google.com/patent/CN115154547B/zh",
+    gist: "黃芪、黨參、熟地黃、白朮、茯苓、麥門冬、五味子、防風、黃芩、陳皮、炙甘草。實施例為水煎口服。",
+    parts: [
+      P("黃芪", { min: 6, max: 30, unit: "重量份" }),
+      P("黨參", { min: 6, max: 30, unit: "重量份" }),
+      P("熟地黃", { min: 6, max: 30, unit: "重量份" }),
+      P("白朮", { min: 6, max: 30, unit: "重量份" }),
+      P("茯苓", { min: 6, max: 30, unit: "重量份" }),
+      P("麥門冬", { min: 6, max: 30, unit: "重量份" }),
+      P("五味子", { min: 3, max: 6, unit: "重量份" }),
+      P("防風", { min: 6, max: 15, unit: "重量份" }),
+      P("黃芩", { min: 6, max: 15, unit: "重量份" }),
+      P("陳皮", { min: 6, max: 9, unit: "重量份" }),
+      P("甘草", { label: "炙甘草", min: 3, max: 6, unit: "重量份" })
+    ]
+  },
+  {
+    id: "CN115969922B",
+    title: "一種特應性皮炎、濕疹的外用中藥組合物及其除濕糊",
+    jurisdiction: "CN",
+    status: "授權",
+    statusNote: "2024-02-27 授權。天眼查頁面標有效。",
+    filed: "2023-02-17",
+    published: "2023-04-18",
+    granted: "2024-02-27",
+    applicant: "廣東省中醫院",
+    inventors: "林穎、王利勝、甄慶育、陳達燦、黃凱凱",
+    route: "外用",
+    indication: "core",
+    indicationText: "特應性皮炎、濕疹亞急性期滲出",
+    category: "formula",
+    confidence: "組成依公開摘要，本次未取得各藥份量",
+    url: "https://patents.google.com/patent/CN115969922B/zh",
+    gist: "蒼朮、馬齒莧、血竭、青黛、黃連、地榆、五倍子、煅石膏，做成除濕糊。",
+    parts: ["蒼朮","馬齒莧","血竭","青黛","黃連","地榆","五倍子","煅石膏"].map(function (n) { return P(n); })
+  },
+  {
+    id: "CN117100801B",
+    title: "一種抗特異性皮炎的藥物組合物及其製備方法和用途",
+    jurisdiction: "CN",
+    status: "授權",
+    statusNote: "公開頁記載 2025-12-16 授權為 CN117100801B，頁面標 Active。同族包含 WO2024012387A1。",
+    filed: "2022-05-17",
+    published: "2023-11-24",
+    granted: "2025-12-16",
+    applicant: "香港中文大學",
+    inventors: "林志秀、冼彥芳、王藍、盧景勛",
+    route: "未載明",
+    indication: "core",
+    indicationText: "特應性皮炎的皮損與瘙癢",
+    category: "formula",
+    confidence: "已核對摘要範圍與較佳配比",
+    url: "https://patents.google.com/patent/CN117100801B/zh",
+    gist: "黃連、黃芩、黃柏、白鮮皮。較佳例 9:6:6:9。",
+    parts: [
+      P("黃連", { min: 3, max: 50, unit: "重量份" }),
+      P("黃芩", { min: 3, max: 30, unit: "重量份" }),
+      P("黃柏", { min: 3, max: 30, unit: "重量份" }),
+      P("白鮮皮", { min: 6, max: 50, unit: "重量份" })
+    ]
+  },
+  {
+    id: "WO2022047726A1",
+    title: "治療皮膚病的中藥組合物、其製備方法及用途",
+    jurisdiction: "WO",
+    status: "國際公開",
+    statusNote: "PCT 頁面標 Ceased。國際公開後仍可作為先前技術。說明書引 CN110025705A 揭露同一配方，本工作集不另列一筆，避免同一組合被算兩次。",
+    filed: "2020-09-04",
+    published: "2022-03-10",
+    granted: "",
+    applicant: "重慶太極實業（集團）股份有限公司",
+    inventors: "秦少容、卿玉玲、孫克宏、趙嘉將",
+    route: "內外",
+    indication: "core",
+    indicationText: "銀屑病、特應性皮炎、真菌感染及多種皮炎瘙癢；另有針對異位性皮炎的口服液或凝膠",
+    category: "formula",
+    confidence: "已核對國際公開文本的配方",
+    url: "https://patents.google.com/patent/WO2022047726A1/zh",
+    gist: "蒼朮、陳皮、厚朴、白芷、茯苓、大腹皮、生半夏、甘草浸膏、廣藿香油、紫蘇葉油。",
+    parts: [
+      P("蒼朮", { min: 70, max: 90, unit: "重量份" }),
+      P("陳皮", { min: 70, max: 90, unit: "重量份" }),
+      P("厚朴", { min: 70, max: 90, unit: "重量份" }),
+      P("白芷", { min: 110, max: 125, unit: "重量份" }),
+      P("茯苓", { min: 110, max: 125, unit: "重量份" }),
+      P("大腹皮", { min: 110, max: 125, unit: "重量份" }),
+      P("半夏", { label: "生半夏", min: 70, max: 90, unit: "重量份" }),
+      P("甘草", { label: "甘草浸膏", kind: "isolate", min: 5, max: 15, unit: "重量份" }),
+      P("廣藿香", { label: "廣藿香油", kind: "isolate", min: 0.5, max: 1.2, unit: "體積份" }),
+      P("紫蘇", { label: "紫蘇葉油", kind: "isolate", min: 0.2, max: 0.6, unit: "體積份" })
+    ]
+  },
+  {
+    id: "WO2024000914A1",
+    title: "一種治療皮膚病的中藥組合物及其製備方法",
+    jurisdiction: "WO",
+    status: "國際公開",
+    statusNote: "PCT 頁面標 Ceased。優先權 2022-06-30。國際公開仍是先前技術。",
+    filed: "2022-10-10",
+    published: "2024-01-04",
+    granted: "",
+    applicant: "首都醫科大學附屬北京中醫醫院",
+    inventors: "徐佳、王萍",
+    route: "口服",
+    indication: "core",
+    indicationText: "濕疹、皮炎，較佳為特應性皮炎；實施例為口服",
+    category: "formula",
+    confidence: "已核對國際公開文本。選加藥很多，比對只把基本七味當必要成分",
+    url: "https://patents.google.com/patent/WO2024000914A1/zh",
+    gist: "君藥生地黃、梔子；臣藥玄參、淡竹葉；佐藥鉤藤、白茅根、山楂。其餘為實施方式中的選加。",
+    parts: [
+      P("生地黃", { min: 10, max: 30, unit: "重量份" }),
+      P("梔子", { min: 5, max: 25, unit: "重量份" }),
+      P("玄參", { min: 5, max: 20, unit: "重量份" }),
+      P("淡竹葉", { min: 5, max: 15, unit: "重量份" }),
+      P("鉤藤", { min: 5, max: 20, unit: "重量份" }),
+      P("白茅根", { min: 10, max: 30, unit: "重量份" }),
+      P("山楂", { min: 5, max: 15, unit: "重量份" }),
+      P("雞內金", { required: false, min: 5, max: 15, unit: "重量份" }),
+      P("檳榔", { required: false, min: 5, max: 10, unit: "重量份" }),
+      P("金銀花", { required: false, min: 5, max: 15, unit: "重量份" }),
+      P("麥芽", { required: false, min: 5, max: 15, unit: "重量份" }),
+      P("地骨皮", { required: false, min: 5, max: 15, unit: "重量份" }),
+      P("燈心草", { required: false, min: 1, max: 5, unit: "重量份" }),
+      P("馬齒莧", { required: false, min: 5, max: 30, unit: "重量份" }),
+      P("連翹", { required: false, min: 5, max: 15, unit: "重量份" }),
+      P("牡蠣", { required: false, min: 5, max: 30, unit: "重量份" }),
+      P("陳皮", { required: false, min: 5, max: 15, unit: "重量份" }),
+      P("茯苓", { required: false, min: 5, max: 15, unit: "重量份" }),
+      P("甘草", { required: false, min: 5, max: 15, unit: "重量份" })
+    ]
+  },
+  {
+    id: "US11666619B2",
+    title: "含草藥混合提取物的特應性皮炎治療組合物",
+    jurisdiction: "US",
+    status: "授權",
+    statusNote: "2023-06-06 授權。請求項 1 把六味熱水提取物的重量比限定為 1:1:1:1:1:1。",
+    filed: "2017-09-01",
+    published: "",
+    granted: "2023-06-06",
+    applicant: "K-LAB Corp.（首爾）",
+    inventors: "Seong-Gyu Ko、Inhwa Choi、Younghee Yun、Se Hyang Hong、Jin Mo Ku",
+    route: "內外",
+    indication: "core",
+    indicationText: "預防或治療特應性皮炎；劑型涵蓋口服與外用",
+    category: "formula",
+    confidence: "已核對美國授權請求項 1",
+    url: "https://patents.google.com/patent/US11666619B2/en",
+    gist: "黃柏、荊芥穗、苦參、甘草、麥門冬（Liriope）、乾地黃，等重量熱水提取。",
+    parts: [
+      P("黃柏", { min: 1, max: 1, unit: "重量比" }),
+      P("荊芥穗", { min: 1, max: 1, unit: "重量比" }),
+      P("苦參", { min: 1, max: 1, unit: "重量比" }),
+      P("甘草", { min: 1, max: 1, unit: "重量比" }),
+      P("麥門冬", { label: "麥門冬（Liriope tuber）", min: 1, max: 1, unit: "重量比" }),
+      P("生地黃", { label: "乾地黃", min: 1, max: 1, unit: "重量比" })
+    ]
+  },
+  {
+    id: "KR101291343B1",
+    title: "含褐藻糖膠與生藥提取物的特應性皮炎改善霜",
+    jurisdiction: "KR",
+    status: "授權",
+    statusNote: "2013-07-30 授權。2019-08-21 轉讓予 Genpure。頁面標 Active，屆滿日欄 2031-03-11。",
+    filed: "2011-03-11",
+    published: "2012-09-20",
+    granted: "2013-07-30",
+    applicant: "申請人為大邱天主教大學產學合作團；後轉讓 Genpure",
+    inventors: "梁在浩（양재호）",
+    route: "外用",
+    indication: "core",
+    indicationText: "特應性皮炎症狀改善用乳霜",
+    category: "formula",
+    confidence: "已核對摘要。生藥是擇一或合併，不是固定復方",
+    url: "https://patents.google.com/patent/KR101291343B1/en",
+    gist: "褐藻糖膠 2–5%，再加上洋甘菊、辛夷、甘草提取物中的一種或以上，合計 5–17%。",
+    parts: [
+      P("褐藻糖膠", { kind: "other", min: 2, max: 5, unit: "重量%" }),
+      P("洋甘菊", { required: false, label: "洋甘菊提取物" }),
+      P("辛夷", { required: false, label: "辛夷提取物" }),
+      P("甘草", { required: false, label: "甘草提取物", kind: "isolate" })
+    ]
+  },
+  {
+    id: "TW201412323A",
+    title: "用於治療慢性發炎皮膚病之局部用組成物",
+    jurisdiction: "TW",
+    status: "公開未授權",
+    statusNote: "台灣公開號為 A。本次頁面未確認是否在台灣獲准。優先權 2012-06-17。",
+    filed: "2013-06-17",
+    published: "2014-04-01",
+    granted: "",
+    applicant: "Kamedis Ltd.",
+    inventors: "Sharon Rozenblat",
+    route: "外用",
+    indication: "core",
+    indicationText: "慢性發炎性皮膚病，說明書點名接觸性皮膚炎與異位性皮膚炎",
+    category: "formula",
+    confidence: "已核對中文公開摘要",
+    url: "https://patents.google.com/patent/TW201412323A/zh",
+    gist: "掌葉大黃根、蛇床果實、黃芩根、甘草酸二鉀、玻尿酸，加上皮膚科可接受載體。",
+    parts: [
+      P("掌葉大黃", { label: "掌葉大黃根提取物" }),
+      P("蛇床子", { label: "蛇床果實提取物" }),
+      P("黃芩", { label: "黃芩根提取物" }),
+      P("甘草", { label: "甘草酸二鉀", kind: "isolate" }),
+      P("玻尿酸", { kind: "other", min: 0.001, max: 0.2, unit: "% w/w" })
+    ]
+  },
+  {
+    id: "TWI746701B",
+    title: "治療異位性皮膚炎的方法與組合物",
+    jurisdiction: "TW",
+    status: "授權",
+    statusNote: "2021-11-21 授權。有效成分是環己烯酮化合物，不是中藥復方。放在庫裡是為了避免把異位性皮炎專利都當成草藥案。",
+    filed: "2017-11-17",
+    published: "2018-07-16",
+    granted: "2021-11-21",
+    applicant: "國鼎生物科技股份有限公司",
+    inventors: "劉勝勇、陳志銘",
+    route: "口服",
+    indication: "core",
+    indicationText: "異位性皮膚炎",
+    category: "nonherb",
+    confidence: "已核對摘要",
+    url: "https://patents.google.com/patent/TWI746701B/zh",
+    gist: "環己烯酮化合物。與中藥飲片配方沒有藥味重疊。",
+    parts: []
+  },
+  {
+    id: "I851286",
+    title: "一種抗皮膚發炎藥物",
+    jurisdiction: "TW",
+    status: "授權",
+    statusNote: "公告日 2024-08-01，屏科大技術轉移頁所載。請求項的皮膚炎列舉未包含異位性皮膚炎。",
+    filed: "",
+    published: "",
+    granted: "2024-08-01",
+    applicant: "國立屏東科技大學（技術轉移頁）",
+    inventors: "頁面未在本次摘錄",
+    route: "未載明",
+    indication: "adjacent",
+    indicationText: "皮膚發炎；請求項例示交界性皮膚炎、疥癬、膿疱性皮膚炎等",
+    category: "formula",
+    confidence: "已核對技術轉移頁的請求項摘要",
+    url: "https://technology.npust.edu.tw/patents/i851286/",
+    gist: "牛蒡，並含綠原酸大於 50 ppm、菊糖大於 1%，以及多酚氧化酶與過氧化酶合計大於 50 ppm。",
+    parts: [
+      P("牛蒡"),
+      P("綠原酸", { kind: "other" }),
+      P("菊糖", { kind: "other" }),
+      P("多酚氧化酶", { kind: "other" }),
+      P("過氧化酶", { kind: "other" })
+    ]
+  },
+  {
+    id: "US20240216454A1",
+    title: "以下田菊提取物治療皮炎的方法與醫藥組合物",
+    jurisdiction: "US",
+    status: "公開未授權",
+    statusNote: "美國申請 18/396,942，2024-07-04 公開。本次資料是申請公開，不是授權。",
+    filed: "2023-12-27",
+    published: "2024-07-04",
+    granted: "",
+    applicant: "工業技術研究院",
+    inventors: "溫淑芳、黃國魁、潘一紅、呂奕璜",
+    route: "未載明",
+    indication: "core",
+    indicationText: "異位性皮炎或接觸性皮炎；機制涉及抑制 IL-4",
+    category: "single",
+    confidence: "已核對申請公開摘要與申請人",
+    url: "https://patents.google.com/patent/US20240216454A1/en",
+    gist: "單味下田菊（Adenostemma lavenia）提取物。",
+    parts: [ P("下田菊", { label: "下田菊提取物", kind: "isolate" }) ]
+  },
+  {
+    id: "CN202111505028",
+    title: "一種用於治療特應性皮炎的外用中藥組合物及其製備方法和應用",
+    jurisdiction: "CN",
+    status: "公開未授權",
+    statusNote: "這裡的號碼是轉載頁上的申請號，不是公開號。請到 CNIPA 用申請號覆核公開號與法律狀態。",
+    filed: "2021",
+    published: "",
+    granted: "",
+    applicant: "轉載頁未載明，請覆核",
+    inventors: "",
+    route: "外用",
+    indication: "core",
+    indicationText: "特應性皮炎外用",
+    category: "formula",
+    confidence: "組成依國知局文本轉載，申請號未經 CNIPA 覆核",
+    url: "https://www.xjishu.com/zhuanli/05/202111505028.html",
+    gist: "沙棘、赤芍、生地、蛇床子、白鮮皮、苦參、連翹、羊蹄根。較佳例 50、15、30、30、30、30、18、30 克。",
+    parts: [
+      P("沙棘", { min: 30, max: 60, unit: "克" }),
+      P("赤芍", { min: 8, max: 25, unit: "克" }),
+      P("生地黃", { label: "生地", min: 18, max: 45, unit: "克" }),
+      P("蛇床子", { min: 18, max: 45, unit: "克" }),
+      P("白鮮皮", { min: 18, max: 45, unit: "克" }),
+      P("苦參", { min: 18, max: 45, unit: "克" }),
+      P("連翹", { min: 10, max: 25, unit: "克" }),
+      P("羊蹄根", { min: 18, max: 45, unit: "克" })
+    ]
+  },
+  {
+    id: "CN202111506892",
+    title: "一種治療特應性皮炎的中藥組合物及其製備方法和應用",
+    jurisdiction: "CN",
+    status: "公開未授權",
+    statusNote: "號碼是轉載頁上的申請號。轉載頁發布日期 2022-01-29。請以 CNIPA 覆核公開號。實施例為灌胃，請求項劑型含口服與外用。",
+    filed: "",
+    published: "2022-01-29",
+    granted: "",
+    applicant: "北京中醫藥大學",
+    inventors: "鄭豐杰、李宇航、張淑靜、孫燕、湯陽、李昱達、王航",
+    route: "內外",
+    indication: "core",
+    indicationText: "特應性皮炎；由麻黃連翹赤小豆湯加減而來",
+    category: "formula",
+    confidence: "組成依國知局文本轉載",
+    url: "https://www.xjishu.com/zhuanli/05/202111506892.html",
+    gist: "麻黃、連翹、蟬蛻、凌霄花、赤小豆、沙棘、白鮮皮、地膚子、生甘草。較佳例 6、15、9、15、30、30、15、15、9 克。",
+    parts: [
+      P("麻黃", { min: 4, max: 8, unit: "克" }),
+      P("連翹", { min: 13, max: 18, unit: "克" }),
+      P("蟬蛻", { min: 6, max: 12, unit: "克" }),
+      P("凌霄花", { min: 13, max: 18, unit: "克" }),
+      P("赤小豆", { min: 25, max: 35, unit: "克" }),
+      P("沙棘", { min: 25, max: 35, unit: "克" }),
+      P("白鮮皮", { min: 13, max: 18, unit: "克" }),
+      P("地膚子", { min: 13, max: 18, unit: "克" }),
+      P("甘草", { label: "生甘草", min: 6, max: 10, unit: "克" })
+    ]
+  }
+];
+
+const ALIASES = {
+  "甘草": ["甘草","生甘草","炙甘草","甘草浸膏","甘草酸","甘草酸二鉀","甘草酸二钾","dipotassium glycyrrhizate","glycyrrhiza","glycyrrhizae","licorice","gancao"],
+  "白鮮皮": ["白鮮皮","白鲜皮","白癬皮","白藓皮","dictamnus"],
+  "苦參": ["苦參","苦参","苦參鹼","苦参碱","matrine","sophora flavescens","sophorae"],
+  "黃柏": ["黃柏","黄柏","黃蘗","川黃柏","phellodendron","phellodendri"],
+  "黃連": ["黃連","黄连","coptis"],
+  "黃芩": ["黃芩","黄芩","scutellaria","scutellariae"],
+  "生地黃": ["生地黃","生地黄","生地","乾地黃","干地黄","乾地黃","radix rehmanniae","rehmannia"],
+  "熟地黃": ["熟地黃","熟地黄","熟地"],
+  "荊芥穗": ["荊芥穗","荆芥穗","荊芥","荆芥","schizonepeta"],
+  "麥門冬": ["麥門冬","麦门冬","麥冬","麦冬","山麥冬","liriope","liriopis"],
+  "蛇床子": ["蛇床子","蛇床","cnidium","osthole","蛇床子素"],
+  "白朮": ["白朮","白术","於朮","atractylodes macrocephala"],
+  "蒼朮": ["蒼朮","苍术","茅朮","atractylodes lancea","atractylodis rhizoma"],
+  "茯苓": ["茯苓","白茯苓","云苓","poria"],
+  "茯神": ["茯神"],
+  "當歸": ["當歸","当归"],
+  "川芎": ["川芎"],
+  "丹參": ["丹參","丹参"],
+  "防風": ["防風","防风"],
+  "白芍": ["白芍"],
+  "赤芍": ["赤芍"],
+  "柴胡": ["柴胡"],
+  "黃芪": ["黃芪","黃耆","黄芪"],
+  "黨參": ["黨參","党参"],
+  "太子參": ["太子參","太子参","孩儿参","pseudostellaria"],
+  "人參": ["人參","人参","ginseng"],
+  "枸杞子": ["枸杞子","枸杞"],
+  "地骨皮": ["地骨皮"],
+  "金銀花": ["金銀花","金银花","忍冬","雙花","lonicera"],
+  "連翹": ["連翹","连翘","forsythia"],
+  "馬齒莧": ["馬齒莧","马齿苋"],
+  "薄荷": ["薄荷","薄荷醇","menthol"],
+  "狗脊": ["狗脊","燙狗脊","烫狗脊"],
+  "桑白皮": ["桑白皮","桑皮"],
+  "地膚子": ["地膚子","地肤子","地膚子皂苷","地肤子皂苷"],
+  "蟬蛻": ["蟬蛻","蝉蜕","蝉衣"],
+  "烏梢蛇": ["烏梢蛇","乌梢蛇","烏蛇","乌蛇"],
+  "紫草": ["紫草","紫草炭"],
+  "白芷": ["白芷"],
+  "黃精": ["黃精","黄精"],
+  "白礬": ["白礬","白矾","明礬"],
+  "煅石膏": ["煅石膏","熟石膏"],
+  "滑石": ["滑石","滑石粉"],
+  "冰片": ["冰片","梅片","borneol"],
+  "凡士林": ["凡士林","vaseline"],
+  "珍珠": ["珍珠","珍珠粉"],
+  "珍珠母": ["珍珠母"],
+  "牡蠣": ["牡蠣","牡蛎","煅牡蠣"],
+  "薏苡仁": ["薏苡仁","薏米","苡仁","coix"],
+  "山藥": ["山藥","山药","淮山","懷山藥"],
+  "白茅根": ["白茅根","茅根","imperata"],
+  "何首烏": ["何首烏","首烏","首乌"],
+  "石榴皮": ["石榴皮"],
+  "地榆": ["地榆","生地榆"],
+  "沙參": ["沙參","沙参","南沙參","北沙參"],
+  "天花粉": ["天花粉"],
+  "知母": ["知母"],
+  "木瓜": ["木瓜"],
+  "雞血藤": ["雞血藤","鸡血藤"],
+  "蒺藜": ["蒺藜","刺蒺藜","白蒺藜","炒蒺藜"],
+  "十大功勞": ["十大功勞","十大功劳","功勞木"],
+  "凌霄花": ["凌霄花"],
+  "千里光": ["千里光","九里明"],
+  "白花蛇舌草": ["白花蛇舌草"],
+  "牛蒡子": ["牛蒡子","牛旁子","惡實"],
+  "牛蒡": ["牛蒡","牛蒡根"],
+  "野菊花": ["野菊花"],
+  "蒲公英": ["蒲公英"],
+  "紫花地丁": ["紫花地丁","紫花地丁草"],
+  "龍膽": ["龍膽","龙胆","龍膽草"],
+  "魚腥草": ["魚腥草","鱼腥草"],
+  "大青葉": ["大青葉","大青叶"],
+  "茵陳": ["茵陳","茵陈"],
+  "紫蘇": ["紫蘇","紫苏","紫蘇葉","紫苏叶","紫蘇葉油","perilla"],
+  "丁香": ["丁香"],
+  "五味子": ["五味子"],
+  "冬瓜子": ["冬瓜子","冬瓜仁","冬瓜仁油"],
+  "紅花": ["紅花","红花"],
+  "蜂蠟": ["蜂蠟","蜂蜡","beeswax"],
+  "萆薢": ["萆薢","萆薢"],
+  "厚朴": ["厚朴","川朴","magnolia officinalis"],
+  "陳皮": ["陳皮","陈皮"],
+  "大腹皮": ["大腹皮"],
+  "半夏": ["半夏","生半夏","清半夏","法半夏"],
+  "廣藿香": ["廣藿香","广藿香","藿香油","廣藿香油","patchouli"],
+  "血竭": ["血竭"],
+  "青黛": ["青黛"],
+  "五倍子": ["五倍子"],
+  "玄參": ["玄參","玄参"],
+  "淡竹葉": ["淡竹葉","淡竹叶","竹葉"],
+  "山楂": ["山楂"],
+  "雞內金": ["雞內金","鸡内金"],
+  "檳榔": ["檳榔","槟榔"],
+  "麥芽": ["麥芽","麦芽"],
+  "燈心草": ["燈心草","灯心草","燈心"],
+  "梔子": ["梔子","栀子","山梔"],
+  "沙棘": ["沙棘"],
+  "羊蹄根": ["羊蹄根","羊蹄"],
+  "麻黃": ["麻黃","麻黄"],
+  "赤小豆": ["赤小豆"],
+  "掌葉大黃": ["掌葉大黃","掌叶大黄","北大黃","rheum palmatum"],
+  "下田菊": ["下田菊","adenostemma","adenostemma lavenia"],
+  "褐藻糖膠": ["褐藻糖膠","褐藻糖胶","岩藻聚醣","fucoidan"],
+  "洋甘菊": ["洋甘菊","卡莫米爾","chamomile"],
+  "辛夷": ["辛夷","辛夷花"],
+  "玻尿酸": ["玻尿酸","透明質酸","透明质酸","hyaluronic"],
+  "綠原酸": ["綠原酸","绿原酸","chlorogenic"],
+  "菊糖": ["菊糖","inulin"],
+  "紅沒藥醇": ["紅沒藥醇","红没药醇","bisabolol"],
+  "牡丹皮": ["牡丹皮","丹皮","丹皮酚","paeonol"],
+  "酸棗仁": ["酸棗仁","酸枣仁"],
+  "桃仁": ["桃仁"],
+  "鉤藤": ["鉤藤","钩藤"],
+  "廊茵": ["廊茵"],
+  "大苞芹": ["大苞芹"],
+  "多酚氧化酶": ["多酚氧化酶"],
+  "過氧化酶": ["過氧化酶"]
+};
+
+const SAMPLES = {
+  kaju: "黃柏 1\n荊芥 1\n苦參 1\n甘草 1\n麥門冬 1\n生地黃 1",
+  sea: "沙棘 50\n赤芍 15\n生地黃 30\n蛇床子 30\n白鮮皮 30\n苦參 30\n連翹 18\n羊蹄根 30",
+  add: "黃柏 1\n荊芥 1\n苦參 1\n甘草 1\n麥門冬 1\n生地黃 1\n厚朴 1"
+};
+
+function aliasIndex() {
+  const map = new Map();
+  Object.keys(ALIASES).forEach(function (canon) {
+    ALIASES[canon].forEach(function (a) {
+      map.set(String(a).toLowerCase().replace(/\s+/g, ""), canon);
+    });
+    map.set(canon.toLowerCase(), canon);
+  });
+  return map;
+}
+const ALIAS_MAP = aliasIndex();
+
+function normalizeToken(raw) {
+  const cleaned = String(raw || "").trim().replace(/[（(].*?[）)]/g, "").replace(/\s+/g, "");
+  const key = cleaned.toLowerCase();
+  if (ALIAS_MAP.has(key)) return ALIAS_MAP.get(key);
+  return cleaned;
+}
+
+function looksIsolate(raw) {
+  return /素|醇|酸|鹼|碱|苷|甙|油|浸膏|提取物|萃取|炭/.test(raw);
+}
+
+function processMark(raw) {
+  if (/炙/.test(raw)) return "炙";
+  if (/生/.test(raw)) return "生";
+  if (/炒/.test(raw)) return "炒";
+  if (/燙|烫/.test(raw)) return "燙";
+  return "";
+}
+
+function parseFormula(text) {
+  const items = [];
+  const unknown = [];
+  String(text || "").split(/\n/).forEach(function (line) {
+    line.split(/[、,，;；]/).forEach(function (chunk) {
+      const part = chunk.trim();
+      if (!part || part.charAt(0) === "#") return;
+      const m = part.match(/^(.+?)(?:\s+)(\d+(?:\.\d+)?)(?:\s*(g|克|份|重量份|%|％))?\s*$/i)
+        || part.match(/^(.+?)(\d+(?:\.\d+)?)(?:\s*(g|克|份|重量份|%|％))?\s*$/i);
+      let nameRaw = part;
+      let amount = null;
+      let unit = "";
+      if (m && /[\u4e00-\u9fffA-Za-z]/.test(m[1])) {
+        nameRaw = m[1].trim();
+        amount = parseFloat(m[2]);
+        unit = m[3] || "";
+      }
+      const name = normalizeToken(nameRaw);
+      if (!name) return;
+      const known = ALIAS_MAP.has(nameRaw.replace(/\s+/g, "").toLowerCase());
+      if (!known) unknown.push(nameRaw);
+      items.push({
+        raw: nameRaw,
+        name: name,
+        amount: amount,
+        unit: unit,
+        kind: looksIsolate(nameRaw) ? "isolate" : "herb",
+        process: processMark(nameRaw)
+      });
+    });
+  });
+  const merged = [];
+  const seen = new Map();
+  items.forEach(function (it) {
+    if (seen.has(it.name)) return;
+    seen.set(it.name, true);
+    merged.push(it);
+  });
+  return { items: merged, unknown: unknown };
+}
+
+function allParts(patent) {
+  if (patent.groups && patent.groups.length) {
+    return patent.groups.map(function (g) {
+      return { group: g.name, route: g.route || patent.route, parts: g.parts };
+    });
+  }
+  return [{ group: "", route: patent.route, parts: patent.parts || [] }];
+}
+
+function activeParts(parts, requiredOnly) {
+  return parts.filter(function (p) {
+    if (p.role === "carrier") return false;
+    if (requiredOnly && p.required === false) return false;
+    return true;
+  });
+}
+
+function routeOverlap(userRoute, patentRoute) {
+  if (!userRoute || userRoute === "未指定" || !patentRoute || patentRoute === "未載明" || patentRoute === "內外" || userRoute === "內外") return true;
+  return userRoute === patentRoute;
+}
+
+function compareUnit(userItems, unit, patent, useAmounts) {
+  const userNames = userItems.map(function (x) { return x.name; });
+  const userSet = new Set(userNames);
+  const parts = unit.parts || [];
+  const universe = parts.filter(function (p) { return p.role !== "carrier"; });
+  const required = universe.filter(function (p) { return p.required !== false; });
+  const allNames = new Set(universe.map(function (p) { return p.name; }));
+  const reqNames = required.map(function (p) { return p.name; });
+  const reqSet = new Set(reqNames);
+  const sharedParts = universe.filter(function (p) { return userSet.has(p.name); });
+  const shared = sharedParts.map(function (p) { return p.name; });
+  const reqHit = reqNames.filter(function (n) { return userSet.has(n); });
+  const reqMiss = reqNames.filter(function (n) { return !userSet.has(n); });
+  const userExtra = userNames.filter(function (n) { return !allNames.has(n); });
+  const userMissingFromAll = userNames.filter(function (n) { return !allNames.has(n); });
+  const isolateGap = sharedParts.length > 0 && sharedParts.every(function (p) {
+    return p.kind === "isolate";
+  }) && userItems.filter(function (u) { return shared.indexOf(u.name) >= 0; }).every(function (u) { return u.kind !== "isolate"; });
+
+  let relation = "none";
+  if (reqNames.length && reqMiss.length === 0 && userExtra.length === 0 && userNames.length) relation = "same";
+  else if (reqNames.length >= 2 && reqNames.length <= 12 && reqMiss.length === 0 && userExtra.length > 0) relation = "contains-known-core";
+  else if (userExtra.length === 0 && userNames.length >= 2 && reqMiss.length > 0 && reqHit.length >= 2 && reqHit.length / userNames.length >= 0.5 && reqNames.length >= userNames.length * 1.5) relation = "subset-of-large";
+  else if (shared.length >= 2 && (shared.length / userNames.length >= 0.45 || (reqNames.length && reqHit.length / reqNames.length >= 0.45))) relation = "partial";
+  else if (shared.length >= 1) relation = "touch";
+
+  if (relation === "same" && isolateGap) relation = "same-form";
+  if (relation === "contains-known-core" && isolateGap) relation = "core-form";
+
+  const processNotes = [];
+  sharedParts.forEach(function (p) {
+    const u = userItems.filter(function (it) { return it.name === p.name; })[0];
+    const theirs = processMark(p.label);
+    if (u && u.process && theirs && u.process !== theirs) {
+      processNotes.push(u.raw + " 對上 " + p.label + "，炮製不同");
+    }
+  });
+
+  const amountNotes = [];
+  if (useAmounts) {
+    sharedParts.forEach(function (p) {
+      const u = userItems.filter(function (it) { return it.name === p.name; })[0];
+      if (!u || u.amount == null || p.min == null || p.max == null) return;
+      const inside = u.amount >= p.min && u.amount <= p.max;
+      const scaleOff = u.amount * 5 < p.min || u.amount > p.max * 5;
+      const range = p.min + "–" + p.max + (p.unit || "");
+      amountNotes.push(p.label + " " + u.amount + (scaleOff ? " 和請求項 " + range + " 的尺度差很大，先不要當成超出範圍" : (inside ? " 落在 " : " 超出 ") + range));
+    });
+  }
+
+  let score = { none: 0, touch: 16, partial: 38, "subset-of-large": 46, "core-form": 58, "contains-known-core": 74, "same-form": 78, same: 93 }[relation];
+  if (patent.indication !== "core") score -= 14;
+  if (!routeOverlap(arguments[4], unit.route)) score -= 8;
+  if (patent.category === "nonherb") score = 0;
+  score = Math.max(0, Math.min(100, score));
+
+  return {
+    score: score,
+    relation: relation,
+    shared: shared,
+    reqMiss: reqMiss,
+    userExtra: userExtra,
+    processNotes: processNotes,
+    amountNotes: amountNotes,
+    isolateGap: isolateGap,
+    group: unit.group,
+    route: unit.route
+  };
+}
+
+const RELATION_TEXT = {
+  same: "必要藥味和你的配方一致。同一組藥物、同一類用途，新穎性風險高。",
+  "same-form": "藥味來源對得上，但對方請求的是提取物、鹽類、油或炮製品，不是一般飲片原方。",
+  "contains-known-core": "你的配方含有這件文獻的全部必要藥味，另外又多了藥。多出來的藥味才是和已公開組合的差別。",
+  "core-form": "對方的必要成分都能在你的藥味裡找到來源，但對方請求的是純成分而不是飲片。",
+  "subset-of-large": "你的藥味都出現在這張較大的處方裡。對方沒有單獨把你這個較小組合說成發明。這比較像刪藥是否顯而易見，而不是相同組合物已經被公開。",
+  partial: "有一部分藥味重疊，組合本身不同。",
+  touch: "只擦到一味或一個成分。",
+  none: "沒有對上的藥味。"
+};
+
+function levelFromScore(score) {
+  if (score >= 80) return { key: "high", title: "相同組合已經公開", lead: "以這份工作集，不適合再把同一組藥味、同一用途當成新發明去申請。若仍要申請，技術特徵得改到和這些文獻明顯不同，並有實驗把那個不同證明出來。" };
+  if (score >= 65) return { key: "mid", title: "裡面含有已經公開的小複方", lead: "已知的那一組藥不能再當作你的發明點。請求項要保護你多出來的完整組合，說明書要解釋為什麼加上那些藥不是顯而易見。" };
+  if (score >= 40) return { key: "mid", title: "有先前技術要在說明書裡處理", lead: "還沒看到與你相同的小組合，但已有文獻用到你的藥，或把你的藥包在大復方裡。申請文件應主動寫出這些差別。" };
+  return { key: "low", title: "這份工作集裡還沒看到接近的組合", lead: "這只代表收錄的文獻沒有貼近你的藥味表。期刊、論文、藥物說明書和其他專利庫仍可能有更接近的先前技術。" };
+}
+
+function analyzeFormula(text, userRoute, useAmounts) {
+  const parsed = parseFormula(text);
+  const hits = [];
+  if (!parsed.items.length) return { parsed: parsed, hits: [], level: null };
+  DB.forEach(function (patent) {
+    if (patent.category === "nonherb") return;
+    allParts(patent).forEach(function (unit) {
+      const hit = compareUnit(parsed.items, unit, patent, !!useAmounts, userRoute);
+      if (hit.relation === "none" || hit.score <= 0) return;
+      hit.patent = patent;
+      hit.routeOverlap = routeOverlap(userRoute, unit.route);
+      hits.push(hit);
+    });
+  });
+  hits.sort(function (a, b) { return b.score - a.score; });
+  const top = hits.length ? hits[0].score : 0;
+  return { parsed: parsed, hits: hits, level: levelFromScore(top), top: top };
+}
+
+function herbRecords() {
+  const map = new Map();
+  DB.forEach(function (p) {
+    if (p.category === "nonherb") return;
+    const names = new Set();
+    allParts(p).forEach(function (unit) {
+      unit.parts.forEach(function (part) {
+        if (part.kind === "other" || part.role === "carrier") return;
+        names.add(part.name);
+      });
+    });
+    names.forEach(function (name) {
+      if (!map.has(name)) map.set(name, []);
+      map.get(name).push(p);
+    });
+  });
+  return map;
+}
+
+function escapeHtml(s) {
+  return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+    return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+  });
+}
+
+function fmtParts(parts, requiredOnly) {
+  return (parts || []).filter(function (p) { return !requiredOnly || p.required !== false; }).map(function (p) {
+    const range = p.min != null ? " " + p.min + (p.max != null && p.max !== p.min ? "–" + p.max : "") + (p.unit || "") : "";
+    const mark = p.required === false ? "（選加）" : "";
+    return p.label + range + mark;
+  }).join("、");
+}
+
+function selfTest() {
+  const a = analyzeFormula(SAMPLES.kaju, "口服", true);
+  const b = analyzeFormula(SAMPLES.sea, "外用", true);
+  const c = analyzeFormula(SAMPLES.add, "口服", false);
+  const d = analyzeFormula("黃連 9\n黃芩 6\n黃柏 6\n白鮮皮 9", "未指定", true);
+  const e = analyzeFormula("甘草\n金銀花", "口服", false);
+  function top(res, id) {
+    return res.hits.filter(function (h) { return h.patent.id === id; })[0];
+  }
+  const out = {
+    kaju: top(a, "US11666619B2") && top(a, "US11666619B2").relation,
+    kajuLevel: a.level && a.level.key,
+    sea: top(b, "CN202111505028") && top(b, "CN202111505028").relation,
+    add: top(c, "US11666619B2") && top(c, "US11666619B2").relation,
+    four: top(d, "CN117100801B") && top(d, "CN117100801B").relation,
+    light: e.level && e.level.key,
+    lightTop: e.hits[0] ? e.hits[0].relation + ":" + e.hits[0].score : "none"
+  };
+  const ok = out.kaju === "same" && out.kajuLevel === "high" && out.sea === "same" && out.add === "contains-known-core" && out.four === "same" && out.light !== "high";
+  out.ok = ok;
+  return out;
+}
+
+function boot() {
+  const views = ["overview", "formula", "db", "herbs", "help"];
+  function show(name) {
+    views.forEach(function (v) {
+      document.getElementById("view-" + v).classList.toggle("hide", v !== name);
+    });
+    document.querySelectorAll("nav button").forEach(function (btn) {
+      btn.classList.toggle("active", btn.getAttribute("data-view") === name);
+    });
+  }
+  document.querySelectorAll("nav button").forEach(function (btn) {
+    btn.addEventListener("click", function () { show(btn.getAttribute("data-view")); });
+  });
+
+  const coreCount = DB.filter(function (p) { return p.indication === "core" && p.category !== "nonherb"; }).length;
+  const grantCount = DB.filter(function (p) { return p.status === "授權"; }).length;
+  document.getElementById("stat-cards").innerHTML = [
+    [DB.length, "件公開文獻"],
+    [coreCount, "件明確寫到異位性皮炎的草藥案"],
+    [grantCount, "件頁面記載為授權"],
+    [new Set(DB.map(function (p) { return p.jurisdiction; })).size, "個受理局或途徑"]
+  ].map(function (x) { return "<div class='card'><b>" + x[0] + "</b><span>" + x[1] + "</span></div>"; }).join("");
+
+  const freq = [];
+  herbRecords().forEach(function (list, name) {
+    const core = list.filter(function (p) { return p.indication === "core"; }).length;
+    freq.push({ name: name, core: core, all: list.length });
+  });
+  freq.sort(function (a, b) { return b.core - a.core || b.all - a.all; });
+  const maxCore = freq[0] ? freq[0].core : 1;
+  document.getElementById("top-herbs").innerHTML = freq.slice(0, 12).map(function (h) {
+    return "<div style='margin:8px 0'><div class='row' style='justify-content:space-between'><span>" + escapeHtml(h.name) + "</span><span class='small muted'>" + h.core + " 件核心案</span></div><div class='bar'><i style='width:" + Math.round(h.core / maxCore * 100) + "%'></i></div></div>";
+  }).join("");
+
+  document.getElementById("scope-note").textContent = "本檔內建 " + DB.length + " 件，整理日 " + BUILT_AT + "。來源是 Google Patents、技術轉移頁與國知局文本轉載。兩件中國案目前只核到申請號。CN108853272B 的藥味來自另一件國際公開的引述。台灣案件很少，不代表台灣沒有其他相關申請。";
+
+  const formulaBox = document.getElementById("formula");
+  const saved = localStorage.getItem("adHerbFormulaDraft");
+  if (saved) formulaBox.value = saved;
+  formulaBox.addEventListener("input", function () {
+    localStorage.setItem("adHerbFormulaDraft", formulaBox.value);
+  });
+
+  document.querySelectorAll("[data-sample]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      const key = btn.getAttribute("data-sample");
+      formulaBox.value = SAMPLES[key];
+      document.getElementById("route").value = key === "sea" ? "外用" : "口服";
+      document.getElementById("use-amounts").checked = key !== "add";
+      localStorage.setItem("adHerbFormulaDraft", formulaBox.value);
+      renderResult();
+    });
+  });
+
+  let lastReport = "";
+  function renderResult() {
+    const route = document.getElementById("route").value;
+    const useAmounts = document.getElementById("use-amounts").checked;
+    const res = analyzeFormula(formulaBox.value, route, useAmounts);
+    const box = document.getElementById("result");
+    if (!res.parsed.items.length) {
+      box.innerHTML = "<h2>比對結果</h2><p class='muted'>還沒有讀到藥味。</p>";
+      lastReport = "";
+      return;
+    }
+    const lv = res.level;
+    const herbs = res.parsed.items.map(function (it) { return it.raw + (it.raw !== it.name ? " → " + it.name : ""); }).join("、");
+    const unknown = res.parsed.unknown.length ? "<p class='small'>這些寫法不在別名表，已用原名去對：" + escapeHtml(res.parsed.unknown.join("、")) + "。若專利用了不同藥名，可能對不到。</p>" : "";
+    const crowd = res.parsed.items.map(function (it) {
+      const list = herbRecords().get(it.name) || [];
+      const core = list.filter(function (p) { return p.indication === "core"; }).length;
+      return { name: it.name, core: core };
+    }).sort(function (a, b) { return a.core - b.core; });
+    const rare = crowd.filter(function (h) { return h.core <= 1; });
+    let html = "<div class='verdict " + lv.key + "'><strong>" + escapeHtml(lv.title) + "</strong>" + escapeHtml(lv.lead) + "</div>";
+    html += "<p class='small'>辨認後的藥味：" + escapeHtml(herbs) + "。途徑：" + escapeHtml(route) + "。</p>" + unknown;
+    html += "<h3>較少見的藥味</h3><p class='small'>" + (rare.length ? rare.map(function (h) { return escapeHtml(h.name) + "（核心案 " + h.core + " 件）"; }).join("、") : "你列出的藥在核心案裡都不算少見。") + "</p>";
+    html += "<h3>由近到遠</h3>";
+    const lines = [];
+    res.hits.slice(0, 8).forEach(function (hit) {
+      const p = hit.patent;
+      const title = p.id + (hit.group ? " · " + hit.group : "");
+      html += "<div class='hit'><div class='row'><b>" + escapeHtml(title) + "</b><span class='pill'>" + hit.score + "</span><span class='pill " + (p.indication === "core" ? "core" : "adj") + "'>" + (p.indication === "core" ? "適應症明確" : "鄰近用途") + "</span>" + (hit.routeOverlap ? "" : "<span class='pill warn'>途徑不同</span>") + "</div>";
+      html += "<div class='small'>" + escapeHtml(RELATION_TEXT[hit.relation]) + "</div>";
+      html += "<div class='small muted'>重疊：" + escapeHtml(hit.shared.join("、") || "無") + (hit.userExtra.length ? "。你多出來：" + escapeHtml(hit.userExtra.join("、")) : "") + (hit.reqMiss.length ? "。對方還有：" + escapeHtml(hit.reqMiss.join("、")) : "") + "</div>";
+      if (hit.processNotes.length) html += "<div class='small'>" + escapeHtml(hit.processNotes.join("；")) + "</div>";
+      if (hit.amountNotes.length) html += "<div class='small'>" + escapeHtml(hit.amountNotes.join("；")) + "</div>";
+      if (/二手|申請號|未經/.test(p.confidence)) html += "<div class='small muted'>資料注意：" + escapeHtml(p.confidence) + "</div>";
+      html += "<div class='small'><a href='" + escapeHtml(p.url) + "' target='_blank' rel='noopener'>" + escapeHtml(p.url) + "</a></div></div>";
+      lines.push(title + " [" + hit.score + "] " + RELATION_TEXT[hit.relation] + " 重疊:" + hit.shared.join("、"));
+    });
+    if (!res.hits.length) html += "<p>沒有對上的藥味。</p>";
+    html += "<p class='small muted'>分數只用來排序。80 分以上代表組合幾乎相同，不是核准機率。</p>";
+    box.innerHTML = html;
+    lastReport = [
+      "異位性皮膚炎中草藥專利工作集",
+      "整理日 " + BUILT_AT,
+      "配方: " + res.parsed.items.map(function (it) { return it.raw; }).join("、"),
+      "途徑: " + route,
+      "判斷: " + lv.title,
+      lv.lead,
+      ""
+    ].concat(lines).join("\n");
+  }
+
+  document.getElementById("run").addEventListener("click", renderResult);
+  document.getElementById("export-report").addEventListener("click", function () {
+    if (!lastReport) renderResult();
+    if (!lastReport) return;
+    const blob = new Blob([lastReport], { type: "text/plain;charset=utf-8" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "ad-herb-patent-screen.txt";
+    a.click();
+    URL.revokeObjectURL(a.href);
+  });
+
+  const jur = document.getElementById("f-jur");
+  const st = document.getElementById("f-status");
+  Array.from(new Set(DB.map(function (p) { return p.jurisdiction; }))).forEach(function (j) {
+    const o = document.createElement("option"); o.value = j; o.textContent = j; jur.appendChild(o);
+  });
+  Array.from(new Set(DB.map(function (p) { return p.status; }))).forEach(function (s) {
+    const o = document.createElement("option"); o.value = s; o.textContent = s; st.appendChild(o);
+  });
+
+  function patentHay(p) {
+    const names = [];
+    allParts(p).forEach(function (u) { u.parts.forEach(function (part) { names.push(part.name, part.label); }); });
+    return [p.id, p.title, p.applicant, p.inventors, p.gist, names.join(" ")].join(" ").toLowerCase();
+  }
+
+  function renderTable() {
+    const q = document.getElementById("q").value.trim().toLowerCase();
+    const fj = jur.value, fr = document.getElementById("f-route").value, fi = document.getElementById("f-ind").value, fs = st.value;
+    const rows = DB.filter(function (p) {
+      if (fj && p.jurisdiction !== fj) return false;
+      if (fr && p.route !== fr) return false;
+      if (fi && p.indication !== fi) return false;
+      if (fs && p.status !== fs) return false;
+      if (q && patentHay(p).indexOf(q) < 0 && normalizeToken(q) && patentHay(p).indexOf(normalizeToken(q).toLowerCase()) < 0) return false;
+      return true;
+    });
+    document.getElementById("patent-rows").innerHTML = rows.map(function (p) {
+      const req = p.groups ? p.groups.map(function (g) { return g.name + "：" + fmtParts(activeParts(g.parts, true), false); }).join("；") : fmtParts(activeParts(p.parts || [], true), false);
+      return "<tr class='clickable' data-id='" + escapeHtml(p.id) + "'><td><b>" + escapeHtml(p.id) + "</b><div class='small'>" + escapeHtml(p.title) + "</div><div class='small muted'>" + escapeHtml(p.applicant) + "</div></td><td><span class='pill " + (p.indication === "core" ? "core" : "adj") + "'>" + escapeHtml(p.status) + "</span><div class='small muted'>" + escapeHtml(p.jurisdiction) + " · " + escapeHtml(p.filed || "申請日未收錄") + "</div></td><td>" + escapeHtml(p.route) + "</td><td class='small'>" + escapeHtml(req || "無草藥藥味") + "</td></tr>";
+    }).join("") || "<tr><td colspan='4'>沒有符合的文獻。</td></tr>";
+    document.querySelectorAll("#patent-rows tr.clickable").forEach(function (tr) {
+      tr.addEventListener("click", function () { renderDetail(tr.getAttribute("data-id")); });
+    });
+  }
+
+  function renderDetail(id) {
+    const p = DB.filter(function (x) { return x.id === id; })[0];
+    if (!p) return;
+    const blocks = allParts(p).map(function (u) {
+      return "<h3>" + escapeHtml(u.group || "組成") + " · " + escapeHtml(u.route) + "</h3><p>" + escapeHtml(fmtParts(u.parts, false)) + "</p>";
+    }).join("");
+    document.getElementById("patent-detail").innerHTML = "<div class='panel' style='margin-top:12px'><h2>" + escapeHtml(p.id) + "</h2><p>" + escapeHtml(p.title) + "</p><p class='small'>" + escapeHtml(p.gist) + "</p><p class='small muted'>" + escapeHtml(p.statusNote) + "</p><p class='small'>發明人：" + escapeHtml(p.inventors || "未收錄") + "<br>申請 " + escapeHtml(p.filed || "—") + " · 公開 " + escapeHtml(p.published || "—") + " · 授權 " + escapeHtml(p.granted || "—") + "<br>資料信心：" + escapeHtml(p.confidence) + "</p>" + blocks + "<p><a href='" + escapeHtml(p.url) + "' target='_blank' rel='noopener'>開啟來源頁</a></p></div>";
+    document.getElementById("patent-detail").scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }
+
+  ["q", "f-jur", "f-route", "f-ind", "f-status"].forEach(function (id) {
+    document.getElementById(id).addEventListener("input", renderTable);
+    document.getElementById(id).addEventListener("change", renderTable);
+  });
+  renderTable();
+
+  const herbMap = document.getElementById("herb-map");
+  function renderHerbs() {
+    const q = normalizeToken(document.getElementById("herb-q").value.trim());
+    const list = [];
+    herbRecords().forEach(function (patents, name) {
+      if (q && name.indexOf(q) < 0 && q.indexOf(name) < 0) return;
+      list.push({ name: name, patents: patents });
+    });
+    list.sort(function (a, b) { return b.patents.length - a.patents.length; });
+    herbMap.innerHTML = list.map(function (h) {
+      return "<div class='hit'><b>" + escapeHtml(h.name) + "</b> <span class='small muted'>" + h.patents.length + " 件</span><div class='small'>" + h.patents.map(function (p) { return escapeHtml(p.id); }).join("、") + "</div></div>";
+    }).join("") || "<p class='muted'>沒有這味藥。</p>";
+  }
+  document.getElementById("herb-q").addEventListener("input", renderHerbs);
+  renderHerbs();
+  show("formula");
+}
+
+if (typeof document !== "undefined") boot();
+</script>
+</body>
+</html>
